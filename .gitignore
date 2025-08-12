@@ -1,0 +1,11 @@
+.env
+.claude
+# Added by code-review-graph
+.code-review-graph/
+.mcp.json
+.opencode.json
+.cursorrules
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.windsurfrules
