@@ -1,0 +1,12 @@
+Options -Indexes
+
+# Rewrite everything to index.php — except real files (css, js, img, etc.)
+RewriteEngine On
+RewriteBase /
+
+# Don't rewrite real files or directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route everything else to the front controller
+RewriteRule ^ index.php [QSA,L]
