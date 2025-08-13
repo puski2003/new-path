@@ -1,0 +1,73 @@
+/* Summary Cards — used by admin dashboard */
+.summary-cards {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.summary-card {
+    background-color: var(--color-bg-white);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex: 1 1 200px;
+    box-shadow: var(--shadow-sm);
+}
+
+.summary-card--growth  { border-left: 4px solid var(--color-primary); }
+.summary-card--pending { border-left: 4px solid var(--color-warning); }
+.summary-card--upcoming { border-left: 4px solid var(--color-secondary); }
+
+.summary-card__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.summary-card__icon img {
+    width: 24px;
+    height: 24px;
+}
+
+.summary-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.summary-card__label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    font-weight: var(--font-weight-medium);
+}
+
+.summary-card__value {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    line-height: 1.2;
+}
+
+.summary-card__sub {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .summary-cards {
+        flex-direction: column;
+    }
+
+    .summary-card {
+        flex: unset;
+        width: 100%;
+    }
+}
