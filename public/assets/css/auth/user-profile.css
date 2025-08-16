@@ -1,0 +1,249 @@
+/* User Menu Dropdown Styles */
+.user-menu-container {
+    position: relative;
+    display: inline-block;
+}
+
+.user-menu-dropdown {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: var(--color-bg-white);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 180px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.2s ease;
+    margin-bottom: 8px;
+}
+
+.user-menu-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-menu-dropdown .menu-option {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    transition: background-color 0.2s ease;
+}
+
+.user-menu-dropdown .menu-option:hover {
+    background-color: var(--color-bg-light-green);
+}
+
+.user-menu-dropdown .menu-option:first-child {
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.user-menu-dropdown .menu-option:last-child {
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+
+/* Profile Modal Styles - Match post-modal exactly */
+.profile-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.profile-modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.profile-modal {
+    background: white;
+    border-radius: var(--radius-lg);
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9) translateY(-20px);
+    transition: transform 0.3s ease;
+    overflow: hidden;
+}
+
+.profile-modal-overlay.show .profile-modal {
+    transform: scale(1) translateY(0);
+}
+
+.profile-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xl);
+    border-bottom: 1px solid var(--color-border-primary);
+    background: white;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.profile-modal-header h3 {
+    margin: 0;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.profile-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+}
+
+.profile-modal-close:hover {
+    background-color: var(--color-bg-light-green);
+    color: var(--color-text-primary);
+}
+
+.profile-modal-body {
+    padding: var(--spacing-xl);
+    overflow-y: auto;
+    flex: 1;
+    max-height: calc(90vh - 120px);
+}
+
+/* Custom scrollbar for modal body - match post-modal */
+.profile-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.profile-modal-body::-webkit-scrollbar-track {
+    background: var(--color-bg-light-green);
+    border-radius: 3px;
+}
+
+.profile-modal-body::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 3px;
+}
+
+.profile-modal-body::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-dark);
+}
+
+.profile-modal-subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}
+
+/* Profile Picture Upload */
+.profile-picture-upload {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.current-profile-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--color-border-primary);
+}
+
+.current-profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Form Row for side-by-side inputs */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+/* Modal Actions */
+.profile-modal-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: flex-end;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-border-primary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-modal {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .profile-modal-body {
+        padding: var(--spacing-lg);
+        max-height: calc(95vh - 100px);
+    }
+
+    .profile-modal-header {
+        padding: var(--spacing-lg);
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-picture-upload {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-modal-actions {
+        flex-direction: column;
+        position: sticky;
+        bottom: 0;
+        background: white;
+        padding-top: var(--spacing-md);
+        margin-top: var(--spacing-lg);
+        border-top: 1px solid var(--color-border-primary);
+    }
+
+    .profile-modal-actions .btn {
+        width: 100%;
+    }
+}
