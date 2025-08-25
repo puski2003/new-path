@@ -1,0 +1,118 @@
+/**
+ * Admin Layout Styles
+ * Used by: all admin pages via admin.html.head.php
+ *
+ * admin-main-container / admin-main-content  — standard pattern (most pages)
+ * admin-layout / admin-content               — dashboard variant (dashboard.css)
+ */
+
+/* ── Outer shell ────────────────────────────────────────────── */
+.admin-main-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Content region ─────────────────────────────────────────── */
+.admin-main-content {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;        /* prevent flex children from overflowing grid/charts */
+    background: linear-gradient(0deg, var(--color-bg-overlay) 0%, var(--color-bg-overlay) 100%), var(--color-bg-white);
+    padding: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2xl);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ── Page header (shared across all admin pages) ─────────────── */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.page-header h1,
+.admin-main-content > h1 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+.page-header .welcome-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+/* ── Section sub-containers ──────────────────────────────────── */
+.admin-sub-container-1 {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.admin-sub-container-2 {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    background: var(--color-bg-white);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-xl);
+    /* box-shadow: var(--shadow-sm); */
+}
+
+/* ── Page header row with actions ───────────────────────────── */
+.admin-page-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.admin-page-header-row .recovery-plans-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+/* Section headings inside sub-containers */
+.admin-sub-container-2 > h2,
+.admin-sub-container-2 > .admin-sub-container-1 > h2 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .admin-main-content {
+        margin-left: 0;
+        padding: var(--spacing-md);
+        /* leave room for the fixed hamburger button */
+        padding-top: calc(var(--spacing-md) + 56px);
+        gap: var(--spacing-md);
+    }
+
+    .admin-sub-container-1 {
+        flex-direction: column;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-main-content {
+        padding: var(--spacing-sm);
+        padding-top: calc(var(--spacing-sm) + 56px);
+    }
+}
