@@ -1,0 +1,170 @@
+/* Find People Page Styles */
+.find-people-container {
+    padding: var(--spacing-xl);
+}
+
+.users-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.user-card {
+    background: var(--color-bg-white);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    transition: all 0.2s ease;
+}
+
+.user-card:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-primary);
+}
+
+.user-card-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--color-bg-light-green);
+    border: 2px solid var(--color-primary-light);
+}
+
+.user-card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-card-name {
+    margin: 0 0 4px 0;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.user-card-name a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.user-card-name a:hover {
+    color: var(--color-primary);
+}
+
+.user-card-username {
+    display: block;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    margin-bottom: 4px;
+}
+
+.user-card-followers {
+    display: block;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+}
+
+.user-card-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.btn-follow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    background: var(--color-primary);
+    color: #000;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-follow:hover {
+    background: var(--color-primary-dark);
+    transform: scale(1.02);
+}
+
+.btn-follow svg {
+    width: 16px;
+    height: 16px;
+}
+
+.btn-follow.following {
+    background: var(--color-bg-light-green);
+    color: var(--color-text-secondary);
+}
+
+.btn-follow.following:hover {
+    background: #fee;
+    color: #dc2626;
+}
+
+.btn-follow.following:hover::before {
+    content: 'Unfollow';
+}
+
+.btn-follow.following:hover svg {
+    display: none;
+}
+
+.btn-more {
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-full);
+    background: var(--color-bg-light-green);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-more:hover {
+    background: var(--color-border-primary);
+}
+
+.btn-more svg {
+    width: 18px;
+    height: 18px;
+    color: var(--color-text-secondary);
+}
+
+/* Empty State */
+.find-people-container .empty-state {
+    grid-column: 1 / -1;
+    padding: var(--spacing-4xl);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .users-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .user-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .user-card-actions {
+        width: 100%;
+        justify-content: center;
+    }
+}
