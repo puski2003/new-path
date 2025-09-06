@@ -1,0 +1,201 @@
+.checkin-container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.checkin-done-banner {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-left: 4px solid #22c55e;
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: #15803d;
+}
+
+.checkin-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.checkin-section {
+    background: var(--color-bg-white);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg) var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.checkin-section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+/* Sobriety toggle */
+.sober-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    cursor: pointer;
+}
+
+.sober-toggle input { display: none; }
+
+.sober-toggle-track {
+    width: 48px;
+    height: 26px;
+    background: var(--color-bg-light-green);
+    border-radius: var(--radius-pill);
+    position: relative;
+    transition: background 0.2s ease;
+    border: 1px solid var(--color-border-primary);
+    flex-shrink: 0;
+}
+
+.sober-toggle input:checked + .sober-toggle-track {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.sober-toggle-thumb {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: var(--radius-full);
+    transition: transform 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.sober-toggle input:checked ~ .sober-toggle-track .sober-toggle-thumb {
+    transform: translateX(22px);
+}
+
+.sober-toggle-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+}
+
+/* Mood rating row */
+.rating-row {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: space-between;
+}
+
+.rating-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    flex: 1;
+}
+
+.rating-option input { display: none; }
+
+.rating-emoji {
+    font-size: 28px;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    border: 2px solid transparent;
+    background: var(--color-bg-light-green);
+    transition: all 0.2s ease;
+}
+
+.rating-option input:checked + .rating-emoji {
+    border-color: var(--color-primary);
+    background: var(--color-primary-light);
+    transform: scale(1.1);
+}
+
+.rating-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    font-weight: var(--font-weight-medium);
+}
+
+/* Slider row */
+.slider-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.slider-label-left,
+.slider-label-right {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    min-width: 36px;
+}
+
+.slider-label-right { text-align: right; }
+
+.checkin-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: var(--radius-pill);
+    background: var(--color-bg-light-green);
+    outline: none;
+    cursor: pointer;
+}
+
+.checkin-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.slider-value {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Notes */
+.checkin-notes {
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--spacing-md);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+    font-family: var(--font-family-primary);
+    resize: vertical;
+    outline: none;
+    background: var(--color-bg-white);
+    transition: border-color 0.2s ease;
+}
+
+.checkin-notes:focus { border-color: var(--color-primary); }
