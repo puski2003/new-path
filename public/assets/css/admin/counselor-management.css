@@ -1,0 +1,68 @@
+/* Counselor Management Page Styles */
+
+.admin-sub-container-1 {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-lg);
+}
+
+.admin-sub-container-2 {
+    background-color: var(--color-bg-white);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-lg);
+    /* box-shadow: var(--shadow-sm); */
+}
+
+.admin-summary-card {
+    background-color: var(--color-bg-white);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-md);
+    flex: 1 1 200px;
+    /* box-shadow: var(--shadow-sm); */
+    display: flex;
+    align-items: center;
+}
+
+.admin-summary-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.admin-summary-card-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.admin-summary-card-info {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+}
+
+.admin-summary-card-subinfo {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+/* Table section headers */
+.admin-sub-container-2 h2 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-sub-container-1 {
+        flex-direction: column;
+    }
+
+    .admin-summary-card {
+        flex: unset;
+        width: 100%;
+    }
+}
