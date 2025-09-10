@@ -1,0 +1,256 @@
+/* Counselor client-profile workspace — mirrors user/single-counselor-view */
+@import './base.css';
+
+/* ── Hero profile card (mirrors .counselor-profile-card) ── */
+.cc-profile-card {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-bg-white);
+    padding: var(--spacing-xl) var(--spacing-xl);
+    gap: var(--spacing-lg);
+}
+
+.cc-profile-avatar img {
+    width: 130px;
+    height: 130px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 3px solid rgba(61, 168, 228, 0.2);
+    flex-shrink: 0;
+}
+
+.cc-profile-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    min-width: 0;
+}
+
+.cc-profile-name {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.cc-profile-status {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+.cc-profile-email {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.cc-profile-pricing {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    flex-shrink: 0;
+    gap: var(--spacing-xs);
+}
+
+.cc-profile-pricing .stat-value {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-accent);
+}
+
+.cc-profile-pricing .stat-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+}
+
+/* ── Session stats overview (mirrors .reviews-overview) ── */
+.cc-session-stats {
+    display: flex;
+    gap: var(--spacing-2xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.cc-stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.cc-stat-num {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-accent);
+}
+
+.cc-stat-caption {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+/* Progress fill bar (in sessions section, mirrors .rating-breakdown bar) */
+.cc-progress-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-xs);
+}
+
+.cc-progress-row span:first-child {
+    min-width: 80px;
+    color: var(--color-text-secondary);
+}
+
+.cc-progress-row span:last-child {
+    min-width: 36px;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    text-align: right;
+}
+
+.cc-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--color-primary-light);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+}
+
+.cc-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
+    border-radius: var(--radius-pill);
+    transition: width 0.3s ease;
+}
+
+/* ── Plan card inside plan section ── */
+.cc-plan-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-lg);
+    background: var(--color-primary-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid rgba(61, 168, 228, 0.18);
+}
+
+.cc-plan-card img {
+    width: 100px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
+.cc-plan-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.cc-plan-title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.cc-plan-desc {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
+
+/* ── Notes text area ── */
+.cc-notes-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    background: var(--color-primary-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid rgba(61, 168, 228, 0.15);
+}
+
+/* ── Slider-style progress bar (profile hero) ── */
+.cc-progress-slider {
+    --bg: var(--color-progress-bg);
+    --fill: var(--color-progress-fill);
+    --ring1: var(--color-progress-ring-light);
+    --ring2: var(--color-progress-ring-mid);
+    --knob: var(--color-progress-knob);
+    --height: 10px;
+    --pad: var(--spacing-xs);
+    --value: 0%;
+
+    position: relative;
+    width: 160px;
+    height: calc(var(--height) + var(--pad) * 2);
+    background: var(--bg);
+    border-radius: var(--radius-pill);
+}
+
+.cc-progress-slider .bar {
+    position: absolute;
+    left: var(--pad);
+    right: var(--pad);
+    top: 50%;
+    height: 5px;
+    transform: translateY(-50%);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    background-color: var(--color-progress-track);
+}
+
+.cc-progress-slider .bar::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--value);
+    height: var(--height);
+    background: var(--fill);
+    border-radius: inherit;
+}
+
+.cc-progress-slider .thumb {
+    position: absolute;
+    top: 50%;
+    left: var(--value);
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 15px;
+    border-radius: var(--radius-full);
+    background:
+        radial-gradient(circle at center, var(--knob) 40%, transparent 41%),
+        radial-gradient(circle at center, var(--ring2) 60%, transparent 61%),
+        radial-gradient(circle at center, var(--ring1) 78%, transparent 79%);
+    box-shadow: 0 0 0 2px var(--color-progress-border), var(--shadow-sm);
+    cursor: default;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .cc-profile-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cc-profile-pricing {
+        align-items: flex-start;
+    }
+
+    .cc-session-stats {
+        gap: var(--spacing-lg);
+    }
+
+    .cc-plan-card {
+        flex-direction: column;
+    }
+}

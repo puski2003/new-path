@@ -1,0 +1,171 @@
+/* Counselor clients page — mirrors user/counselors card layout */
+@import './base.css';
+
+/* ── Container ── */
+.cc-clients-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-xl);
+}
+
+/* ── Client row card (mirrors .counselor-card / .my-counselor-card) ── */
+.cc-client-row {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-primary-light);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl) var(--spacing-2xl);
+    gap: var(--spacing-lg);
+    transition: box-shadow 0.2s ease;
+    border: 1px solid rgba(61, 168, 228, 0.15);
+}
+
+.cc-client-row:hover {
+    box-shadow: 0 4px 20px rgba(61, 168, 228, 0.18);
+}
+
+/* ── Avatar ── */
+.cc-client-avatar {
+    flex-shrink: 0;
+}
+
+.cc-client-avatar img {
+    width: 90px;
+    height: 90px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 2px solid rgba(61, 168, 228, 0.2);
+}
+
+/* ── Info block ── */
+.cc-client-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.cc-client-badge {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+}
+
+.cc-client-name {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cc-client-sub {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+/* ── Meta pills ── */
+.cc-client-pills {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+.cc-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    background: var(--color-bg-white);
+    border: 1px solid rgba(61, 168, 228, 0.22);
+    border-radius: var(--radius-pill);
+    padding: 3px 10px;
+}
+
+.cc-pill i,
+.cc-pill svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* ── Action column ── */
+.cc-client-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+/* ── Toolbar row (search + filter inline, no card wrapper) ── */
+.cc-toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-xl);
+}
+
+.cc-toolbar .search-bar {
+    flex: 1;
+    max-width: 400px;
+}
+
+/* ── Empty state ── */
+.cc-empty {
+    text-align: center;
+    padding: var(--spacing-3xl);
+    background: var(--color-bg-white);
+    border-radius: var(--radius-xl);
+    border: 1px dashed rgba(61, 168, 228, 0.3);
+    color: var(--color-text-muted);
+    margin: var(--spacing-lg) var(--spacing-xl);
+}
+
+.cc-empty i,
+.cc-empty svg {
+    width: 48px;
+    height: 48px;
+    color: var(--color-text-muted);
+    display: block;
+    margin: 0 auto var(--spacing-md);
+    opacity: 0.4;
+}
+
+.cc-empty p {
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .cc-client-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: var(--spacing-lg);
+    }
+
+    .cc-client-actions {
+        align-items: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .cc-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: var(--spacing-md);
+    }
+
+    .cc-toolbar .search-bar {
+        max-width: 100%;
+    }
+}
