@@ -1,0 +1,10 @@
+@import './base.css';
+@import '../components/followup-thread.css';
+
+.followup-header-card {
+    background: var(--color-bg-light-green);
+}
+
+.message-mine .message-bubble {
+    color: #fff;
+}
