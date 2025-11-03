@@ -1,0 +1,112 @@
+/**
+ * Admin Summary Card Component (PHP version)
+ * Markup: .summary-card, .summary-card__body, .summary-card__label,
+ *         .summary-card__value, .summary-card__sub, .summary-card__icon
+ * Variants: .summary-card--growth, --alert, --pending, --upcoming
+ */
+
+/* Container row for cards (matches original flex row behavior) */
+.summary-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+/* Base card */
+.summary-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-bg-white);
+    padding: var(--spacing-sm) var(--spacing-md); /* similar to original */
+    border-radius: var(--radius-sm);
+    flex: 1 1 0;                /* equal width across row */
+    min-width: 180px;
+    max-width: 250px;
+    border-left: 5px solid transparent; /* space reserved for variant accent */
+    box-sizing: border-box;
+    /* box-shadow: var(--shadow-sm); */
+}
+
+/* Text container */
+.summary-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Label (title) */
+.summary-card__label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+/* Main value */
+.summary-card__value {
+    font-size: 26px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* Subtext */
+.summary-card__sub {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    margin: 0;
+    color: var(--color-text-muted); /* overridden by variants when needed */
+}
+
+/* Icon box */
+.summary-card__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: var(--radius-sm);
+    background-color: rgba(61, 228, 185, 0.1); /* same as original */
+}
+
+.summary-card__icon img {
+    width: 28px;
+    height: 28px;
+}
+
+/* Variant accents (colors from original JSP logic) */
+.summary-card--growth {
+    border-left-color: #22c55e;
+}
+
+.summary-card--pending {
+    border-left-color: #f97316;
+}
+
+.summary-card--upcoming {
+    border-left-color: #3b82f6;
+}
+
+/* Optional alert variant if you add it later */
+.summary-card--alert {
+    border-left-color: #ef4444;
+}
+
+/* Variant-colored subinfo text (only if you want it) */
+.summary-card--growth .summary-card__sub {
+    color: #22c55e;
+}
+
+.summary-card--pending .summary-card__sub {
+    color: #f97316;
+}
+
+.summary-card--upcoming .summary-card__sub {
+    color: #3b82f6;
+}
+
+.summary-card--alert .summary-card__sub {
+    color: #ef4444;
+}

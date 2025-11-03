@@ -1,0 +1,142 @@
+/**
+ * Recovery Plans Page Styles
+ */
+
+/* Header Section */
+.recovery-plans-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    gap: var(--spacing-lg);
+}
+
+.recovery-plans-count {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.recovery-plans-count h2 {
+    margin: 0;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.plans-count-badge {
+    display: inline-flex;
+    padding: 6px 12px;
+    background-color: var(--color-bg-pale-green);
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+}
+
+.recovery-plans-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+/* Plan Name Cell */
+.plan-name-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.plan-name-cell strong {
+    font-size: var(--font-size-base);
+    color: var(--color-text-primary);
+}
+
+.plan-description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+/* Adoption Rate Cell */
+.adoption-rate-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    min-width: 150px;
+}
+
+.adoption-percentage {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    min-width: 40px;
+}
+
+.adoption-progress-bar {
+    flex: 1;
+    height: 8px;
+    background-color: #e5e7eb;
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+}
+
+.adoption-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #5A9B8E 0%, #3DE4B9 100%);
+    border-radius: var(--radius-pill);
+    transition: width 0.3s ease;
+}
+
+/* Icon Action Buttons (reusable) */
+.icon-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.icon-action-btn img {
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.icon-action-btn:hover {
+    background-color: var(--color-bg-light-green);
+}
+
+.icon-action-btn:hover img {
+    opacity: 1;
+}
+
+/* Question Cell */
+.question-cell {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+}
+
+.question-cell strong {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    line-height: 1.4;
+}
+
+/* Rating Cell */
+.rating-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rating-value {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}

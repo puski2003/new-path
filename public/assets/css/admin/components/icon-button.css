@@ -1,0 +1,45 @@
+/**
+ * Admin Icon Button Component
+ * Used for small icon-only actions in tables
+ */
+
+.admin-icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+    background-color: transparent;
+}
+
+.admin-icon-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.admin-icon-btn--edit {
+    color: var(--color-text-muted);
+}
+
+.admin-icon-btn--edit:hover {
+    background-color: var(--color-bg-pale-green);
+    color: var(--color-primary-dark);
+}
+
+.admin-icon-btn--delete {
+    color: var(--color-text-muted);
+}
+
+.admin-icon-btn--delete:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+}
+
+.admin-icon-btn:active {
+    transform: scale(0.95);
+}

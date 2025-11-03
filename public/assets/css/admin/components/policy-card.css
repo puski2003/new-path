@@ -1,0 +1,95 @@
+/**
+ * Policy Card Component
+ * Used by: policy-card.jsp
+ */
+
+.policy-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.policy-card {
+    background-color: var(--color-bg-white);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    transition: box-shadow 0.2s ease;
+}
+
+.policy-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.policy-card__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.policy-card__updated {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.policy-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.policy-action-link {
+    font-size: var(--font-size-sm);
+    color: #2563eb;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-weight: var(--font-weight-medium);
+    transition: color 0.2s ease;
+}
+
+.policy-action-link:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+.policy-enabled-toggle {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.policy-enabled-toggle input[type="checkbox"] {
+    display: none;
+}
+
+.policy-enabled-toggle label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size-sm);
+    color: #2563eb;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+}
+
+.policy-enabled-toggle svg {
+    width: 16px;
+    height: 16px;
+    stroke: #2563eb;
+}
+
+.policy-enabled-toggle input[type="checkbox"]:not(:checked) + label {
+    color: var(--color-text-muted);
+}
+
+.policy-enabled-toggle input[type="checkbox"]:not(:checked) + label svg {
+    stroke: var(--color-text-muted);
+}

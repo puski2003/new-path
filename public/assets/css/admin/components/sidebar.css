@@ -1,0 +1,141 @@
+/**
+ * Admin Sidebar Component
+ * Extends the shared sidebar token pattern from global.css and components/sidebar.css.
+ * Admin-specific overrides and visual shell.
+ */
+
+/* ── Sidebar shell ─────────────────────────────────────────── */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    z-index: var(--z-sidebar);
+    /* Allow overflow so notification / logout dropdowns can escape */
+    overflow: visible;
+    background-color: var(--color-bg-white);
+    border-right: 1px solid var(--color-border-primary);
+}
+
+/* ── Nav items (same token set as user/counselor) ─────────── */
+.sidebar-item {
+    display: flex;
+    width: var(--sidebar-item-width);
+    height: var(--sidebar-item-height);
+    padding: 11px var(--spacing-sm);
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar-item:hover {
+    background-color: var(--color-bg-light-green);
+}
+
+.sidebar-item--active {
+    background-color: var(--color-bg-light-green);
+}
+
+.sidebar-text {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+/* ── Dropdown icon ─────────────────────────────────────────── */
+.dropdown-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+
+/* ── Mobile Hamburger Toggle ─────────────────────────────── */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: var(--spacing-md);
+    left: var(--spacing-md);
+    z-index: calc(var(--z-sidebar) + 2);
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: var(--radius-sm);
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.sidebar-toggle svg {
+    width: 20px;
+    height: 20px;
+    color: #000;
+    pointer-events: none;
+}
+
+/* ── Sidebar Overlay (mobile backdrop) ─────────────────────── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    z-index: calc(var(--z-sidebar) - 1);
+}
+
+.sidebar-overlay--visible {
+    display: block;
+}
+
+/* ── Mobile Breakpoint ──────────────────────────────────────── */
+/* ── Notification bell inside sidebar ──────────────────────── */
+/* The .notif-bell-wrapper sits inside .user-info which is inside .sidebar.
+   Since sidebar is position:fixed we need the dropdown to escape it via
+   a high z-index (above sidebar z-index). */
+.notif-bell-wrapper {
+    position: relative; /* anchor for dropdown */
+}
+
+.notif-dropdown {
+    /* Override any inline style – force it to be positioned relative to
+       the bell wrapper and use a z-index that sits above everything */
+    position: fixed !important;
+    z-index: 9999 !important;
+    /* Horizontal position is set via JS; vertical adjusted below */
+    bottom: auto;
+    right: auto;
+    width: 340px;
+    max-height: 420px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid rgba(13,28,23,0.15);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+
+@media (max-width: 768px) {
+    .sidebar-toggle {
+        display: flex;
+    }
+
+    .sidebar {
+        transform: translateX(-110%);
+        transition: transform 0.3s ease;
+        width: 260px;
+        box-shadow: 4px 0 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .sidebar--open {
+        transform: translateX(0);
+    }
+}

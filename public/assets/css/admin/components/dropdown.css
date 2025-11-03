@@ -1,0 +1,111 @@
+
+/**
+ * Admin Dropdown Component
+ * Used by: dropdown.jsp
+ * Classes: dropdown-container, dropdown-label, dropdown-wrapper, dropdown-select,
+ *          dropdown-select--default, dropdown-select--ghost, dropdown-select--primary,
+ *          dropdown-icon
+ */
+
+/* Dropdown Container */
+.dropdown-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    width: auto;
+}
+
+.dropdown-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+}
+
+.dropdown-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Dropdown Select Base */
+.dropdown-select {
+    width: auto;
+    padding: var(--spacing-sm) var(--spacing-md);
+    padding-right: calc(var(--spacing-md) + 24px); /* Make room for icon */
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-primary);
+    background-color: var(--color-bg-white);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.dropdown-select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.dropdown-select:hover:not(:disabled) {
+    border-color: var(--color-primary);
+}
+
+.dropdown-select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--color-bg-light-green);
+}
+
+/* Default Variant */
+.dropdown-select--default {
+    background-color: var(--color-bg-white);
+    border-color: var(--color-border-primary);
+}
+
+/* Ghost Variant */
+.dropdown-select--ghost {
+    background-color: transparent;
+    border-color: var(--color-text-muted);
+    color: var(--color-text-muted);
+}
+
+.dropdown-select--ghost:focus {
+    background-color: var(--color-bg-white);
+    color: var(--color-text-primary);
+}
+
+/* Primary Variant */
+.dropdown-select--primary {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary);
+}
+
+.dropdown-icon {
+    position: absolute;
+    right: var(--spacing-md);
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--color-text-muted);
+    transition: transform 0.2s ease;
+}
+
+.dropdown-wrapper:has(.dropdown-select:focus) .dropdown-icon {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Option Styles */
+.dropdown-select option {
+    padding: var(--spacing-sm);
+    background-color: var(--color-bg-white);
+    color: var(--color-text-primary);
+}
+
+.dropdown-select option:disabled {
+    color: var(--color-text-muted);
+}

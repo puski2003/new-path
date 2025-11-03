@@ -1,0 +1,184 @@
+/**
+ * Session Appointments Component
+ * Used by: session-appointments.jsp
+ * Classes: session-appointments, session-appointments-header, session-calendar, etc.
+ */
+
+.session-appointments {
+    background-color: var(--color-bg-white);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+/* Header Section */
+.session-appointments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.session-appointments-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+/* Toggle Buttons */
+.session-appointments-toggle {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.session-toggle-btn {
+    padding: var(--spacing-xs) var(--spacing-lg);
+    border: 1px solid var(--color-border-primary);
+    background-color: transparent;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.session-toggle-btn:hover {
+    background-color: var(--color-bg-light-green);
+    border-color: var(--color-primary);
+}
+
+.session-toggle-btn.active {
+    background-color: var(--color-bg-light-green);
+    border-color: var(--color-primary);
+    color: var(--color-text-primary);
+}
+
+/* Calendar Section */
+.session-calendar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* Calendar Header - Days of Week */
+.session-calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--spacing-xs);
+}
+
+.session-day-header {
+    text-align: center;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    padding: var(--spacing-xs) 0;
+}
+
+/* Calendar Grid - Date Cells */
+.session-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--spacing-xs);
+}
+
+.session-day-cell {
+    background-color: var(--color-bg-light-green);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-sm);
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    transition: background-color 0.2s ease;
+}
+
+.session-day-cell:hover {
+    background-color: #dce8e5;
+}
+
+.session-day-number {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+/* Session Card */
+.session-card {
+    background-color: #5A9B8E;
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.session-card:hover {
+    transform: translateY(-2px);
+}
+
+.session-time {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: #FFFFFF;
+}
+
+.session-name {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: #FFFFFF;
+    line-height: 1.2;
+}
+
+/* Month View Specific Styles */
+.session-calendar-grid--month {
+    grid-template-rows: repeat(5, 1fr);
+}
+
+.session-calendar-grid--month .session-day-cell {
+    min-height: 80px;
+    padding: var(--spacing-xs);
+}
+
+.session-day-cell--empty {
+    background-color: transparent;
+    border: 1px solid var(--color-border-primary);
+    opacity: 0.3;
+}
+
+.session-day-cell--empty:hover {
+    background-color: transparent;
+}
+
+/* Smaller session cards in month view */
+.session-calendar-grid--month .session-card {
+    padding: 4px 6px;
+}
+
+.session-calendar-grid--month .session-time {
+    font-size: 10px;
+}
+
+.session-calendar-grid--month .session-name {
+    font-size: 11px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .session-day-cell {
+        min-height: 100px;
+    }
+    
+    .session-card {
+        padding: 6px var(--spacing-xs);
+    }
+    
+    .session-calendar-grid--month .session-day-cell {
+        min-height: 70px;
+    }
+}

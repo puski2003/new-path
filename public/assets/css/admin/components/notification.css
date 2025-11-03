@@ -1,0 +1,75 @@
+/**
+ * Admin Notification Component
+ * Used by: notification.jsp
+ * Classes: admin-notification, admin-notification-icon, admin-notification-content,
+ *          admin-notification-title, admin-notification-text, admin-notification-tag
+ */
+
+/* Base Notification Card */
+.admin-notification {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    background-color: var(--color-primary-dark);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--color-text-muted);
+    /* transition: transform 0.2s ease, box-shadow 0.2s ease; */
+    width: fill;
+}
+
+.admin-notification:hover {
+    /* transform: translateX(2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); */
+    cursor: pointer;
+}
+
+/* Notification Icon Container */
+.admin-notification-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
+.admin-notification-icon img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Notification Content */
+.admin-notification-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.admin-notification-title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.admin-notification-text {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Notification Tag */
+.admin-notification-tag {
+    padding: 6px 16px;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+    flex-shrink: 0;
+}

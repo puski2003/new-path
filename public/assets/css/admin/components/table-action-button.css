@@ -1,0 +1,151 @@
+/**
+ * Admin Table Action Button Component
+ * Used by: table-action-button.tag
+ * Background variants: admin-button--danger, admin-button--warning, admin-button--pending, admin-button--success, admin-button--ghost
+ * Text color variants: button-color--black (default), button-color--white,
+ *                      button-color--danger, button-color--warning, button-color--pending,
+ *                      button-color--success, button-color--ghost
+ */
+
+ /* Base Button */
+.admin-button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius-sm);
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    transition: all 0.2s ease;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* Danger (Red) */
+.admin-button--danger {
+    background-color: #ef4444;
+}
+.admin-button--danger:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+.admin-button--danger:active {
+    background-color: #b91c1c;
+    transform: translateY(0);
+}
+
+/* Warning (Orange) */
+.admin-button--warning {
+    background-color: #f97316;
+}
+.admin-button--warning:hover {
+    background-color: #ea580c;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+.admin-button--warning:active {
+    background-color: #c2410c;
+    transform: translateY(0);
+}
+
+/* Pending (Yellow) */
+.admin-button--pending {
+    background-color: #eab308;
+}
+.admin-button--pending:hover {
+    background-color: #ca8a04;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+.admin-button--pending:active {
+    background-color: #a16207;
+    transform: translateY(0);
+}
+
+/* Success (Green) */
+.admin-button--success {
+    background-color: #22c55e;
+}
+.admin-button--success:hover {
+    background-color: #16a34a;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+.admin-button--success:active {
+    background-color: #15803d;
+    transform: translateY(0);
+}
+
+/* Ghost (Transparent) */
+.admin-button--ghost {
+    background-color: transparent;
+    border: 1px solid var(--color-text-muted);
+}
+.admin-button--ghost:hover {
+    background-color: var(--color-bg-light-green);
+    border-color: var(--color-primary);
+}
+.admin-button--ghost:active {
+    background-color: var(--color-primary-light);
+}
+
+/* Icon Only Variant */
+.admin-button--icon-only {
+    padding: var(--spacing-sm);
+    width: auto;
+    aspect-ratio: 1;
+}
+
+/* Button Text */
+.button-text {
+    white-space: nowrap;
+}
+
+/* Button Icon (inline SVG) */
+.button-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* Make inline SVG take the current text color */
+.admin-button .button-icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    fill: currentColor;
+    stroke: currentColor;
+}
+
+/* Disabled State */
+.admin-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    pointer-events: none;
+}
+.admin-button:disabled:hover {
+    background-color: inherit;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Focus State */
+.admin-button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Text/Icon color variants (default is black) */
+.button-color--black { color: #000000; }
+.button-color--white { color: #ffffff; }
+.button-color--danger { color: #ef4444; }
+.button-color--warning { color: #f97316; }
+.button-color--pending { color: #eab308; }
+.button-color--success { color: #22c55e; }
+.button-color--ghost { color: var(--color-text-muted); }

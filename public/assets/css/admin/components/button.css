@@ -1,0 +1,147 @@
+/**
+ * Admin Button Component
+ * Used by: button.jsp
+ * Classes: admin-button, admin-button--default, admin-button--ghost, 
+ *          admin-button--primary, admin-button--secondary, admin-button--icon-only,
+ *          button-text, button-icon
+ */
+
+/* Base Button */
+.admin-button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    border: none;
+    background-color: var(--color-primary-dark);
+    color: black;
+    border-radius: var(--radius-sm);
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    transition: all 0.2s ease;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* Default Variant */
+.admin-button--default {
+    background-color: var(--color-primary-dark);
+    color: #000000;
+}
+
+.admin-button--default:hover {
+    background-color: var(--color-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-button--default:active {
+    transform: translateY(0);
+}
+
+/* Ghost Variant */
+.admin-button--ghost {
+    background-color: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-text-muted);
+}
+
+.admin-button--ghost:hover {
+    background-color: var(--color-bg-light-green);
+    color: var(--color-text-primary);
+    border-color: var(--color-primary);
+}
+
+.admin-button--ghost:active {
+    background-color: var(--color-primary-light);
+}
+
+/* Primary Variant */
+.admin-button--primary {
+    background-color: var(--color-primary);
+    color: #000000;
+}
+
+.admin-button--primary:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-button--primary:active {
+    transform: translateY(0);
+}
+
+/* Secondary Variant */
+.admin-button--secondary {
+    background-color: var(--color-bg-pale-green);
+    color: #000000;
+}
+
+.admin-button--secondary:hover {
+    background-color: var(--color-secondary);
+    color: #FFFFFF;
+}
+
+.admin-button--secondary:active {
+    opacity: 0.9;
+}
+
+/* Icon Only Variant */
+.admin-button--icon-only {
+    padding: var(--spacing-sm);
+    width: auto;
+    aspect-ratio: 1;
+}
+
+/* Button Text */
+.button-text {
+    white-space: nowrap;
+}
+
+/* Disabled State */
+.admin-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.admin-button:disabled:hover {
+    background-color: inherit;
+    transform: none;
+}
+
+.button-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* Success Variant */
+.admin-button--success {
+    background-color: #22c55e;
+    color: white;
+}
+
+.admin-button--success:hover {
+    background-color: #16a34a;
+    transform: translateY(-1px);
+}
+
+.admin-button--success:active {
+    transform: translateY(0);
+}
+
+/* Danger Variant */
+.admin-button--danger {
+    background-color: #ef4444;
+    color: white;
+}
+
+.admin-button--danger:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+}
+
+.admin-button--danger:active {
+    transform: translateY(0);
+}

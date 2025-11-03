@@ -1,0 +1,85 @@
+/**
+ * Admin Pending Submissions Component
+ * Used by: resources.jsp
+ */
+
+.admin-pending-submissions {
+    background-color: var(--color-bg-white);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-lg);
+}
+
+.admin-pending-submissions__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.admin-pending-submissions__header h2 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.admin-pending-submissions__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.admin-pending-submissions__empty {
+    color: var(--color-text-muted);
+    font-style: italic;
+    text-align: center;
+    padding: var(--spacing-xl);
+}
+
+.admin-pending-submission-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background-color: var(--color-bg-light-green);
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--color-primary);
+}
+
+.admin-pending-submission-card__content {
+    flex: 1;
+}
+
+.admin-pending-submission-card__title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 4px 0;
+}
+
+.admin-pending-submission-card__subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.admin-pending-submission-card__actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+/* Filter Bar */
+.admin-filter-bar {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Additional Submissions Container */
+.admin-additional-submissions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}

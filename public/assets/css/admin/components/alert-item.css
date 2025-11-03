@@ -1,0 +1,87 @@
+/**
+ * Alert Item Component
+ * Used by: alert-item.jsp
+ */
+
+.security-alerts-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.alert-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s ease;
+}
+
+.alert-item:hover {
+    background-color: var(--color-bg-light-green);
+}
+
+.alert-item__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    flex: 1;
+}
+
+.alert-severity {
+    display: inline-flex;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: capitalize;
+    width: fit-content;
+}
+
+.alert-severity--critical {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+}
+
+.alert-severity--warning {
+    background-color: rgba(234, 179, 8, 0.1);
+    color: #ca8a04;
+}
+
+.alert-severity--info {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+}
+
+.alert-message {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.alert-item__actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-shrink: 0;
+}
+
+.alert-action-btn {
+    font-size: var(--font-size-sm);
+    color: #2563eb;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-weight: var(--font-weight-medium);
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.alert-action-btn:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}

@@ -1,0 +1,126 @@
+/**
+ * Settings Page Styles
+ */
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.settings-form-row {
+    display: flex;
+    gap: var(--spacing-3xl);
+}
+
+.settings-form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Permissions Badges */
+.permissions-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+/* Icon Action Buttons */
+.icon-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.icon-action-btn img {
+    width: 18px;
+    height: 18px;
+}
+
+.icon-action-btn--edit:hover {
+    background-color: rgba(249, 115, 22, 0.1);
+}
+
+.icon-action-btn--delete:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Settings Subsection */
+.settings-subsection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.settings-subsection h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+/* Notification Template Item */
+.notification-template-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: var(--spacing-lg);
+    background-color: var(--color-bg-white);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-sm);
+}
+
+.notification-template-info h4 {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+}
+
+.notification-template-info p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.notification-template-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+/* Policy Document Item */
+.policy-document-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: var(--spacing-lg);
+    background-color: var(--color-bg-white);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-sm);
+}
+
+.policy-document-info h4 {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+}
+
+.policy-document-info p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.policy-document-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
