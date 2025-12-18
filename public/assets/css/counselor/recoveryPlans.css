@@ -1,0 +1,172 @@
+/* Counselor recovery plans list — mirrors user/counselors card layout */
+@import './base.css';
+
+/* ── Container ── */
+.rp-plans-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-xl);
+}
+
+/* ── Plan row card (mirrors .counselor-card) ── */
+.rp-plan-row {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-primary-light);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl) var(--spacing-2xl);
+    gap: var(--spacing-lg);
+    transition: box-shadow 0.2s ease;
+    border: 1px solid rgba(61, 168, 228, 0.15);
+}
+
+.rp-plan-row:hover {
+    box-shadow: 0 4px 20px rgba(61, 168, 228, 0.18);
+}
+
+/* ── Plan image ── */
+.rp-plan-thumb {
+    flex-shrink: 0;
+}
+
+.rp-plan-thumb img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(61, 168, 228, 0.2);
+}
+
+/* ── Info block ── */
+.rp-plan-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.rp-plan-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+}
+
+.rp-plan-title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rp-plan-client {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.rp-plan-desc {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 2px;
+}
+
+/* ── Pills row ── */
+.rp-plan-pills {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+.rp-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    background: var(--color-bg-white);
+    border: 1px solid rgba(61, 168, 228, 0.22);
+    border-radius: var(--radius-pill);
+    padding: 3px 10px;
+}
+
+.rp-pill i,
+.rp-pill svg { width: 12px; height: 12px; }
+
+/* ── Actions column ── */
+.rp-plan-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+/* ── Toolbar ── */
+.rp-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md) var(--spacing-xl);
+    gap: var(--spacing-md);
+}
+
+.rp-toolbar-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+/* ── Empty state ── */
+.rp-empty {
+    text-align: center;
+    padding: var(--spacing-3xl);
+    background: var(--color-bg-white);
+    border-radius: var(--radius-xl);
+    border: 1px dashed rgba(61, 168, 228, 0.3);
+    color: var(--color-text-muted);
+    margin: var(--spacing-lg) var(--spacing-xl);
+}
+
+.rp-empty i,
+.rp-empty svg {
+    width: 48px;
+    height: 48px;
+    display: block;
+    margin: 0 auto var(--spacing-md);
+    opacity: 0.35;
+}
+
+.rp-empty p { font-size: var(--font-size-sm); margin-bottom: var(--spacing-md); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .rp-plan-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: var(--spacing-lg);
+    }
+
+    .rp-plan-actions {
+        align-items: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .rp-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
