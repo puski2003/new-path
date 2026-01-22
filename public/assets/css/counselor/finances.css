@@ -1,0 +1,189 @@
+/* Counselor Finances page */
+@import './base.css';
+
+/* header stat cards use the global .card.days-sober-card — no overrides needed */
+
+
+/* ── Table card — no extra padding (table fills it) ── */
+.theme-counselor .fin-card {
+    padding: 0;
+    overflow: hidden;
+}
+.theme-counselor .days-sober-content h1 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.1;
+    color: var(--color-accent);
+}
+/* ── Table wrapper (scroll on small screens) ── */
+.theme-counselor .fin-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    padding: var(--spacing-lg);
+    box-sizing: border-box;
+}
+
+/* ── Table ── */
+.theme-counselor .fin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+}
+
+.theme-counselor .fin-table thead tr {
+    border-bottom: 2px solid var(--color-border-secondary);
+    background-color: var(--color-bg-cream);
+}
+
+.theme-counselor .fin-table th {
+    text-align: left;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.theme-counselor .fin-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    vertical-align: middle;
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-border-primary);
+}
+
+.theme-counselor .fin-row--even {
+    background-color: var(--color-bg-white);
+}
+
+.theme-counselor .fin-row--odd {
+    background-color: var(--color-primary-light);
+}
+
+.theme-counselor .fin-table tbody tr:hover {
+    background-color: rgba(61, 168, 228, 0.08);
+    transition: background-color 0.15s ease;
+}
+
+/* ── Cell variants ── */
+.theme-counselor .fin-txn-id {
+    font-family: monospace;
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+}
+
+.theme-counselor .fin-client-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.theme-counselor .fin-client-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid rgba(61, 168, 228, 0.2);
+}
+
+.theme-counselor .fin-time {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+.theme-counselor .fin-amount {
+    font-weight: var(--font-weight-semibold);
+}
+
+.theme-counselor .fin-net {
+    color: var(--color-accent);
+}
+
+.theme-counselor .fin-commission {
+    color: var(--color-text-secondary);
+}
+
+.theme-counselor .fin-rate {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+.theme-counselor .fin-period {
+    display: block;
+    font-weight: var(--font-weight-medium);
+}
+
+.theme-counselor .fin-created-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+.theme-counselor .fin-unpaid {
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+
+/* ── Status badges ── */
+.theme-counselor .fin-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: capitalize;
+    white-space: nowrap;
+}
+
+.theme-counselor .badge--success  { background: rgba(34, 197, 94, 0.12);  color: #16a34a; }
+.theme-counselor .badge--warning  { background: rgba(234, 179, 8, 0.15);   color: #854d0e; }
+.theme-counselor .badge--info     { background: rgba(59, 130, 246, 0.12);  color: #1e40af; }
+.theme-counselor .badge--danger   { background: rgba(239, 68, 68, 0.12);   color: #991b1b; }
+.theme-counselor .badge--neutral  { background: var(--color-bg-cream);     color: var(--color-text-secondary); }
+
+/* ── Receipt icon link ── */
+.theme-counselor .fin-receipt-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+}
+
+.theme-counselor .fin-receipt-link:hover {
+    background: var(--color-primary-light);
+    color: var(--color-accent);
+}
+
+.theme-counselor .fin-receipt-link svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ── Pagination — uses global .btn .btn-secondary / .btn-link ── */
+.theme-counselor .fin-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+}
+
+.theme-counselor .fin-page-btn--disabled {
+    opacity: 0.4;
+    cursor: default;
+    pointer-events: none;
+}
+
+.theme-counselor .fin-page-info {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    padding: 0 var(--spacing-sm);
+}
