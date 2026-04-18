@@ -96,4 +96,24 @@ class Step2Model
 
         return $s + $f + $l + $q + $m;
     }
+
+    /**
+     * Save evaluation data (addiction types) to onboarding_evaluation table.
+     */
+    public static function saveEvaluation(int $userId, array $addictions = []): bool {
+        Database::setUpConnection();
+
+        $uid = (int) $userId;
+        $addictionsJson = json_encode($addictions);
+        $addictionsEscaped = Database::$connection->real_escape_string($addictionsJson);
+
+        Database::iud(
+            "INSERT INTO onboarding_evaluation (user_id, addictions)
+             VALUES ($uid, '$addictionsEscaped')
+             ON DUPLICATE KEY UPDATE
+                addictions = '$addictionsEscaped'"
+        );
+
+        return true;
+    }
 }

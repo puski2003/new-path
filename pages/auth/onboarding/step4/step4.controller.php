@@ -10,13 +10,13 @@ $token   = $_COOKIE['jwt'] ?? '';
 $payload = Auth::decode($token);
 $riskScore = 5;
 if ($payload) {
-    $riskScore = Step4Model::getRiskScore((int) $payload['id']);
+    $riskScore = Step4Model::getRiskScore($payload['id']);
 }
 
-if ($riskScore >= 12) {
+if ($riskScore >= 66) {
     $riskBand    = 'HIGH';
     $defaultPlan = 'counselor';
-} elseif ($riskScore >= 8) {
+} elseif ($riskScore >= 33) {
     $riskBand    = 'MODERATE';
     $defaultPlan = 'system';
 } else {

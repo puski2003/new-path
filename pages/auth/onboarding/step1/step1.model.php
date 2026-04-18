@@ -19,7 +19,7 @@ class Step1Model
         Database::setUpConnection();
 
         $hash = password_hash($password, PASSWORD_BCRYPT);
-        $salt = password_hash(random_bytes(16), PASSWORD_BCRYPT);
+        $salt = bin2hex(random_bytes(16));
 
         $safeEmail       = Database::$connection->real_escape_string($email);
         $safeHash        = Database::$connection->real_escape_string($hash);

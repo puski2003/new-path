@@ -1,9 +1,64 @@
 <?php
 
 /**
- * Step 3 Onboarding Controller
+ * Step 3 Onboarding Controller - Dynamic Questions
  */
 $error = null;
+$genericQuestions = [];
+$moduleQuestions = [];
+$selectedAddictions = [];
+$selectedModuleIds = [];
+
+$token = $_COOKIE['jwt'] ?? '';
+$payload = Auth::decode($token);
+
+if ($payload) {
+    Database::setUpConnection();
+    $userId = $payload['id'];
+
+    $rsEval = Database::search("SELECT addictions FROM onboarding_evaluation WHERE user_id = $userId");
+    $evaluation = $rsEval->fetch_assoc();
+
+    if ($evaluation && !empty($evaluation['addictions'])) {
+        $selectedAddictions = json_decode($evaluation['addictions'], true) ?? [];
+
+        if (!empty($selectedAddictions)) {
+            $escapedModKeys = array_map(function($key) {
+                return Database::$connection->real_escape_string($key);
+            }, $selectedAddictions);
+            $modKeysList = implode("','", $escapedModKeys);
+
+            $rsModules = Database::search("SELECT id, module_key, display_name FROM addiction_type_module WHERE module_key IN ('$modKeysList')");
+            while ($row = $rsModules->fetch_assoc()) {
+                $selectedModuleIds[] = (int)$row['id'];
+            }
+        }
+    }
+
+    if (!empty($selectedModuleIds)) {
+        $moduleIdList = implode(',', $selectedModuleIds);
+        $rsModuleQ = Database::search("
+            SELECT q.id, q.question_text, q.weight, q.scale_id, q.display_order, m.module_key, m.display_name
+            FROM onboarding_questions_step_3 q
+            JOIN addiction_type_module m ON q.module_id = m.id
+            WHERE q.module_id IN ($moduleIdList) AND q.status = 'ACTIVE'
+            ORDER BY m.display_name, q.display_order
+        ");
+        while ($row = $rsModuleQ->fetch_assoc()) {
+            $moduleQuestions[$row['module_key']][] = $row;
+        }
+    }
+
+    $rsGeneric = Database::search("
+        SELECT id, question_text, weight, scale_id, display_order
+        FROM onboarding_questions_step_2
+        WHERE status = 'ACTIVE'
+        ORDER BY display_order
+    ");
+    while ($row = $rsGeneric->fetch_assoc()) {
+        $genericQuestions[] = $row;
+    }
+}
 
 if (Request::isPost()) {
     $action = Request::post('action') ?? 'submit';
@@ -16,26 +71,30 @@ if (Request::isPost()) {
         $userId = $payload['id'];
 
         if ($action === 'skip') {
-            // Give 0 score or set a null value for assessment
-            if (Step3Model::saveAssessmentScore($userId, 0)) {
+            if (Step3Model::saveAssessmentAnswers($userId, null, [])) {
                 Response::redirect('/auth/onboarding/step4');
             } else {
                 $error = 'Failed to skip assessment. Please try again.';
             }
         } else {
-            // Calculate a score manually since we don't have a specific table for individual answers.
-            // (Assuming we save to a theoretical column or we just skip this DB insert and move step)
-            $q1 = (int)(Request::post('q1') ?? 0);
-            $q2 = (int)(Request::post('q2') ?? 0);
-            $q3 = (int)(Request::post('q3') ?? 0);
-            $q4 = (int)(Request::post('q4') ?? 0);
-            $q5 = (int)(Request::post('q5') ?? 0);
+            $answers = $_POST['answers'] ?? [];
 
-            if (!$q1 || !$q2 || !$q3 || !$q4 || !$q5) {
-                $error = 'Please answer all questions or choose to skip the assessment.';
+            if (empty($answers)) {
+                $error = 'Please answer at least one question or skip the assessment.';
             } else {
-                $score = $q1 + $q2 + $q3 + $q4 + $q5;
-                if (Step3Model::saveAssessmentScore($userId, $score)) {
+                $answersJson = json_encode($answers);
+
+                $allQuestions = [];
+                foreach ($genericQuestions as $q) {
+                    $allQuestions[$q['id']] = $q['weight'];
+                }
+                foreach ($moduleQuestions as $moduleQs) {
+                    foreach ($moduleQs as $q) {
+                        $allQuestions[$q['id']] = $q['weight'];
+                    }
+                }
+
+                if (Step3Model::saveAssessmentAnswers($userId, $answersJson, $allQuestions)) {
                     Response::redirect('/auth/onboarding/step4');
                 } else {
                     $error = 'Failed to save assessment. Please try again.';

@@ -32,7 +32,40 @@ require_once __DIR__ . '/../../common/auth.head.php';
                     </div>
                 <?php endif; ?>
 
-                <form class="onboarding-form" id="substanceForm" method="POST" action="/auth/onboarding/step2">
+                <?php
+                    $usesSubstancesVal = '';
+                    $primarySubstanceVal = '';
+                    $frequencyVal = '';
+                    $lastUsedVal = '';
+                    $quitAttemptsVal = 0;
+
+                    if ($userProfile) {
+                        $primarySubstanceVal = $userProfile['recovery_type'] ?? '';
+                        $frequencyVal = $userProfile['substance_frequency'] ?? '';
+                        $lastUsedVal = $userProfile['last_used_timeframe'] ?? '';
+                        $quitAttemptsVal = (int) ($userProfile['quit_attempts'] ?? 0);
+                        $usesSubstancesVal = ($primarySubstanceVal && $primarySubstanceVal !== 'None') ? 'yes' : 'no';
+                    }
+
+                    $postUsesSubstances = Request::post('usesSubstances');
+                    if ($postUsesSubstances) {
+                        $usesSubstancesVal = $postUsesSubstances;
+                    }
+                    if (Request::post('primarySubstance')) {
+                        $primarySubstanceVal = Request::post('primarySubstance');
+                    }
+                    if (Request::post('frequency')) {
+                        $frequencyVal = Request::post('frequency');
+                    }
+                    if (Request::post('lastUsed')) {
+                        $lastUsedVal = Request::post('lastUsed');
+                    }
+                    if (Request::post('quitAttempts') !== '') {
+                        $quitAttemptsVal = (int) Request::post('quitAttempts');
+                    }
+                    ?>
+
+                    <form class="onboarding-form" id="substanceForm" method="POST" action="/auth/onboarding/step2">
                     <div class="onboarding-form-inner">
                         <div class="left-form">
                             <div class="question-group">
@@ -40,42 +73,42 @@ require_once __DIR__ . '/../../common/auth.head.php';
                                     <label class="question-label">Do you currently use alcohol or drugs?</label>
                                     <div class="radio-group">
                                         <label class="radio-option">
-                                            <input type="radio" name="usesSubstances" value="yes" required>
+                                            <input type="radio" name="usesSubstances" value="yes" required <?= $usesSubstancesVal === 'yes' ? 'checked' : '' ?>>
                                             <span class="radio-text">Yes</span>
                                         </label>
                                         <label class="radio-option">
-                                            <input type="radio" name="usesSubstances" value="no">
+                                            <input type="radio" name="usesSubstances" value="no" <?= $usesSubstancesVal === 'no' ? 'checked' : '' ?>>
                                             <span class="radio-text">No</span>
                                         </label>
                                     </div>
                                 </div>
 
-                                <div id="substanceDetailsContainer" style="display: none; margin-top: 20px;">
+                                <div id="substanceDetailsContainer" style="display: <?= $usesSubstancesVal === 'yes' ? 'block' : 'none' ?>; margin-top: 20px;">
                                     <div class="form-group">
                                         <label for="primarySubstance">Primary substance</label>
                                         <select id="primarySubstance" class="form-input" name="primarySubstance">
                                             <option value="">Select primary substance</option>
-                                            <option value="Alcohol">Alcohol</option>
-                                            <option value="Marijuana">Marijuana</option>
-                                            <option value="Opioids">Opioids/Heroin</option>
-                                            <option value="Stimulants">Stimulants (Cocaine/Meth)</option>
-                                            <option value="Prescription">Prescription Drugs</option>
-                                            <option value="Other">Other</option>
+                                            <option value="Alcohol" <?= $primarySubstanceVal === 'Alcohol' ? 'selected' : '' ?>>Alcohol</option>
+                                            <option value="Marijuana" <?= $primarySubstanceVal === 'Marijuana' ? 'selected' : '' ?>>Marijuana</option>
+                                            <option value="Opioids" <?= $primarySubstanceVal === 'Opioids' ? 'selected' : '' ?>>Opioids/Heroin</option>
+                                            <option value="Stimulants" <?= $primarySubstanceVal === 'Stimulants' ? 'selected' : '' ?>>Stimulants (Cocaine/Meth)</option>
+                                            <option value="Prescription" <?= $primarySubstanceVal === 'Prescription' ? 'selected' : '' ?>>Prescription Drugs</option>
+                                            <option value="Other" <?= $primarySubstanceVal === 'Other' ? 'selected' : '' ?>>Other</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="right-form" id="additionalDetailsContainer" style="display: none;">
+                        <div class="right-form" id="additionalDetailsContainer" style="display: <?= $usesSubstancesVal === 'yes' ? 'block' : 'none' ?>;">
                             <div class="form-group">
                                 <label for="frequency">How often?</label>
                                 <select id="frequency" class="form-input" name="frequency">
                                     <option value="">Select frequency</option>
-                                    <option value="Daily">Daily</option>
-                                    <option value="Weekly">Weekly</option>
-                                    <option value="Monthly">Monthly</option>
-                                    <option value="Occasionally">Occasionally</option>
+                                    <option value="Daily" <?= $frequencyVal === 'Daily' ? 'selected' : '' ?>>Daily</option>
+                                    <option value="Weekly" <?= $frequencyVal === 'Weekly' ? 'selected' : '' ?>>Weekly</option>
+                                    <option value="Monthly" <?= $frequencyVal === 'Monthly' ? 'selected' : '' ?>>Monthly</option>
+                                    <option value="Occasionally" <?= $frequencyVal === 'Occasionally' ? 'selected' : '' ?>>Occasionally</option>
                                 </select>
                             </div>
 
@@ -83,10 +116,10 @@ require_once __DIR__ . '/../../common/auth.head.php';
                                 <label for="lastUsed">When was the last time?</label>
                                 <select id="lastUsed" class="form-input" name="lastUsed">
                                     <option value="">Select timeframe</option>
-                                    <option value="Today">Today</option>
-                                    <option value="Past week">Past week</option>
-                                    <option value="Past month">Past month</option>
-                                    <option value="More than a month ago">More than a month ago</option>
+                                    <option value="Today" <?= $lastUsedVal === 'Today' ? 'selected' : '' ?>>Today</option>
+                                    <option value="Past week" <?= $lastUsedVal === 'Past week' ? 'selected' : '' ?>>Past week</option>
+                                    <option value="Past month" <?= $lastUsedVal === 'Past month' ? 'selected' : '' ?>>Past month</option>
+                                    <option value="More than a month ago" <?= $lastUsedVal === 'More than a month ago' ? 'selected' : '' ?>>More than a month ago</option>
                                 </select>
                             </div>
 
@@ -94,8 +127,8 @@ require_once __DIR__ . '/../../common/auth.head.php';
                                 <label for="quitAttempts">Previous quit attempts</label>
                                 <div class="progress-slider">
                                     <input type="range" id="quitAttempts" name="quitAttempts"
-                                        class="slider" min="0" max="10" value="0">
-                                    <span class="slider-value" id="quitAttemptsValue">0</span>
+                                        class="slider" min="0" max="10" value="<?= $quitAttemptsVal ?>">
+                                    <span class="slider-value" id="quitAttemptsValue"><?= $quitAttemptsVal . ($quitAttemptsVal == 10 ? '+' : '') ?></span>
                                 </div>
                             </div>
                         </div>
@@ -125,6 +158,30 @@ require_once __DIR__ . '/../../common/auth.head.php';
                         </div>
                     </div>
 
+                    <?php
+                    $selectedAddictions = [];
+                    if ($evaluation && !empty($evaluation['addictions'])) {
+                        $selectedAddictions = json_decode($evaluation['addictions'], true) ?? [];
+                    }
+                    $currentMotivation = Request::post('motivation') ?? ($userProfile['motivation_level'] ?? '');
+                    $showAddictionCheckbox = ($currentMotivation !== 'exploring' && $currentMotivation !== '');
+                    ?>
+
+                    <div id="addictionChecklist" class="question-group" style="margin-top: 28px; display: <?= $showAddictionCheckbox ? 'block' : 'none' ?>;">
+                        <div class="question-item">
+                            <label class="question-label">Select all that apply:</label>
+                            <div class="checkbox-group" style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px;">
+                                <?php foreach ($addictionModules as $mod): ?>
+                                    <label class="checkbox-option" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="addictions[]" value="<?= htmlspecialchars($mod['module_key']) ?>"
+                                            <?= in_array($mod['module_key'], $selectedAddictions) ? 'checked' : '' ?>>
+                                        <span class="checkbox-text"><?= htmlspecialchars($mod['display_name']) ?></span>
+                                    </label>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-actions multi-button">
                         <button type="button" class="btn btn-secondary" onclick="window.location.href='/auth/onboarding/step1'">Back</button>
                         <button type="submit" class="form-submit-btn">Next: Assessment</button>
@@ -141,6 +198,15 @@ require_once __DIR__ . '/../../common/auth.head.php';
                 document.getElementById('substanceDetailsContainer'),
                 document.getElementById('additionalDetailsContainer')
             ];
+            const additionalDetailsContainer = document.getElementById('additionalDetailsContainer');
+
+            // Initialize correct display on page load
+            if (additionalDetailsContainer) {
+                const usesYes = document.querySelector('input[name="usesSubstances"]:checked');
+                if (usesYes && usesYes.value === 'yes') {
+                    additionalDetailsContainer.style.display = 'block';
+                }
+            }
             const selectInputs = document.querySelectorAll('select[name="primarySubstance"], select[name="frequency"], select[name="lastUsed"]');
 
             substanceRadios.forEach(radio => {
@@ -148,7 +214,6 @@ require_once __DIR__ . '/../../common/auth.head.php';
                     const showDetails = this.value === 'yes';
                     detailsContainers.forEach(container => {
                         container.style.display = showDetails ? 'block' : 'none';
-                        // Add animation effect
                         if (showDetails) {
                             container.style.opacity = '0';
                             container.style.transform = 'translateY(-10px)';
@@ -160,16 +225,27 @@ require_once __DIR__ . '/../../common/auth.head.php';
                         }
                     });
 
-                    // Mark selects as required or not
                     selectInputs.forEach(select => {
                         if (showDetails) {
                             select.setAttribute('required', 'required');
                         } else {
                             select.removeAttribute('required');
-                            // Also clear their values so validation passes when not required
                             select.value = '';
                         }
                     });
+                });
+            });
+
+            // Motivation change - show/hide addiction checklist
+            const motivationRadios = document.querySelectorAll('input[name="motivation"]');
+            const addictionChecklist = document.getElementById('addictionChecklist');
+
+            motivationRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const showChecklist = this.value !== 'exploring';
+                    if (addictionChecklist) {
+                        addictionChecklist.style.display = showChecklist ? 'block' : 'none';
+                    }
                 });
             });
 
@@ -180,8 +256,6 @@ require_once __DIR__ . '/../../common/auth.head.php';
             if (slider && output) {
                 slider.oninput = function() {
                     output.innerHTML = this.value + (this.value == 10 ? '+' : '');
-
-                    // Update slider background to mimic fill
                     const percentage = (this.value - this.min) / (this.max - this.min) * 100;
                     this.style.background = `linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) ${percentage}%, var(--color-progress-bg) ${percentage}%, var(--color-progress-bg) 100%)`;
                 }

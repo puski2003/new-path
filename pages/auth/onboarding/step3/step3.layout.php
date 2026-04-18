@@ -2,6 +2,15 @@
 $pageTitle = 'NewPath - Assessment';
 $authCss   = 'onboarding.css';
 require_once __DIR__ . '/../../common/auth.head.php';
+
+function getScaleLabels(int $scaleId): array {
+    return match($scaleId) {
+        1 => ['1' => 'Never/Rarely', '2' => 'Sometimes', '3' => 'Often', '4' => 'Very Often', '5' => 'Always'],
+        2 => ['1' => 'Not at all', '2' => 'Slightly', '3' => 'Moderately', '4' => 'Very much', '5' => 'Extremely'],
+        3 => ['1' => 'No impact', '2' => 'Minor', '3' => 'Moderate', '4' => 'Significant', '5' => 'Major'],
+        default => ['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5'],
+    };
+}
 ?>
 
 <body class="theme-user">
@@ -38,72 +47,73 @@ require_once __DIR__ . '/../../common/auth.head.php';
                 <form class="onboarding-form" id="severityForm" method="POST" action="/auth/onboarding/step3">
                     <input type="hidden" name="action" id="formAction" value="submit">
 
-                    <div class="question-group">
-                        <div class="question-item">
-                            <label class="question-label">1. How often do you experience strong urges?</label>
-                            <p class="question-text">From 1 (Rarely) to 5 (Constantly)</p>
+                    <?php
+                    $questionNumber = 1;
+                    ?>
+                    <?php if (!empty($genericQuestions)): ?>
+                    <div class="question-group" style="margin-bottom: 30px;">
+                        <h3 style="margin-bottom: 20px; color: var(--color-text);">General Assessment</h3>
+                        <?php foreach ($genericQuestions as $idx => $q): ?>
+                        <div class="question-item" style="margin-bottom: 25px;">
+                            <label class="question-label"><span style="font-weight: bold;"><?= $questionNumber ?>. </span><?= htmlspecialchars($q['question_text']) ?></label>
+                            <?php
+                            $scaleLabels = getScaleLabels((int)$q['scale_id']);
+                            ?>
                             <div class="radio-group" style="grid-template-columns: repeat(5, 1fr);">
                                 <?php for ($i = 1; $i <= 5; $i++): ?>
                                     <label class="radio-option">
-                                        <input type="radio" name="q1" value="<?= $i ?>" required>
-                                        <span class="radio-text"><?= $i ?></span>
+                                        <input type="radio" name="answers[<?= $q['id'] ?>]" value="<?= $i ?>" required>
+                                        <span class="radio-text"><?= htmlspecialchars($scaleLabels[(string)$i]) ?></span>
                                     </label>
                                 <?php endfor; ?>
                             </div>
                         </div>
-
-                        <div class="question-item">
-                            <label class="question-label">2. How much does it affect your work/school?</label>
-                            <p class="question-text">From 1 (Not at all) to 5 (Severe disruption)</p>
-                            <div class="radio-group" style="grid-template-columns: repeat(5, 1fr);">
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <label class="radio-option">
-                                        <input type="radio" name="q2" value="<?= $i ?>" required>
-                                        <span class="radio-text"><?= $i ?></span>
-                                    </label>
-                                <?php endfor; ?>
-                            </div>
-                        </div>
-
-                        <div class="question-item">
-                            <label class="question-label">3. How much does it impact your relationships?</label>
-                            <p class="question-text">From 1 (No impact) to 5 (Major conflicts/isolation)</p>
-                            <div class="radio-group" style="grid-template-columns: repeat(5, 1fr);">
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <label class="radio-option">
-                                        <input type="radio" name="q3" value="<?= $i ?>" required>
-                                        <span class="radio-text"><?= $i ?></span>
-                                    </label>
-                                <?php endfor; ?>
-                            </div>
-                        </div>
-
-                        <div class="question-item">
-                            <label class="question-label">4. How is your physical health affected?</label>
-                            <p class="question-text">From 1 (Healthy) to 5 (Severe health issues)</p>
-                            <div class="radio-group" style="grid-template-columns: repeat(5, 1fr);">
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <label class="radio-option">
-                                        <input type="radio" name="q4" value="<?= $i ?>" required>
-                                        <span class="radio-text"><?= $i ?></span>
-                                    </label>
-                                <?php endfor; ?>
-                            </div>
-                        </div>
-
-                        <div class="question-item">
-                            <label class="question-label">5. How confident are you in your ability to quit right now?</label>
-                            <p class="question-text">From 1 (Not confident) to 5 (Very confident)</p>
-                            <div class="radio-group" style="grid-template-columns: repeat(5, 1fr);">
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <label class="radio-option">
-                                        <input type="radio" name="q5" value="<?= $i ?>" required>
-                                        <span class="radio-text"><?= $i ?></span>
-                                    </label>
-                                <?php endfor; ?>
-                            </div>
-                        </div>
+                        <?php $questionNumber++; ?>
+                        <?php endforeach; ?>
                     </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($moduleQuestions)): ?>
+                    <?php foreach ($moduleQuestions as $moduleKey => $questions): ?>
+                    <?php
+                        $moduleLabel = match($moduleKey) {
+                            'MOD_GAMING' => 'Gaming Related',
+                            'MOD_SOCIAL' => 'Social Media Related',
+                            'MOD_PORN' => 'Adult Content Related',
+                            'MOD_SHOPPING' => 'Shopping Related',
+                            'MOD_GAMBLING' => 'Gambling Related',
+                            'MOD_STREAMING' => 'Streaming Related',
+                            default => htmlspecialchars($moduleKey),
+                        };
+                        ?>
+                    <div class="question-group" style="margin-bottom: 30px;">
+                        <h3 style="margin-bottom: 20px; color: var(--color-text);"><?= $moduleLabel ?> Assessment</h3>
+                        <?php foreach ($questions as $q): ?>
+                        <div class="question-item" style="margin-bottom: 25px;">
+                            <label class="question-label"><span style="font-weight: bold;"><?= $questionNumber ?>. </span><?= htmlspecialchars($q['question_text']) ?></label>
+                            <?php
+                            $scaleLabels = getScaleLabels((int)$q['scale_id']);
+                            ?>
+                            <div class="radio-group" style="grid-template-columns: repeat(5, 1fr);">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <label class="radio-option">
+                                        <input type="radio" name="answers[<?= $q['id'] ?>]" value="<?= $i ?>" required>
+                                        <span class="radio-text"><?= htmlspecialchars($scaleLabels[(string)$i]) ?></span>
+                                    </label>
+                                <?php endfor; ?>
+                            </div>
+                        </div>
+                        <?php $questionNumber++; ?>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
+
+                    <?php if (empty($genericQuestions) && empty($moduleQuestions)): ?>
+                    <p style="text-align: center; color: var(--color-text-secondary);">
+                        No assessment questions available. You can skip this step.
+                    </p>
+                    <?php endif; ?>
 
                     <div style="text-align: center; margin-top: 15px;">
                         <button type="button" class="btn btn-text" id="skipBtn" style="color: var(--color-text-secondary); text-decoration: underline; background: none; border: none; cursor: pointer;">
@@ -122,15 +132,17 @@ require_once __DIR__ . '/../../common/auth.head.php';
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('skipBtn').addEventListener('click', function() {
-                // Change action and remove required attributes to allow submission
-                document.getElementById('formAction').value = 'skip';
+            const skipBtn = document.getElementById('skipBtn');
+            if (skipBtn) {
+                skipBtn.addEventListener('click', function() {
+                    document.getElementById('formAction').value = 'skip';
 
-                const radios = document.querySelectorAll('input[type="radio"]');
-                radios.forEach(radio => radio.removeAttribute('required'));
+                    const radios = document.querySelectorAll('input[type="radio"]');
+                    radios.forEach(radio => radio.removeAttribute('required'));
 
-                document.getElementById('severityForm').submit();
-            });
+                    document.getElementById('severityForm').submit();
+                });
+            }
         });
     </script>
 </body>
