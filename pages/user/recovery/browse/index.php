@@ -40,12 +40,7 @@ $pageStyle = ['user/dashboard', 'user/manage-plans', 'user/browse-plans'];
                 <div class="empty-state">
                     <i data-lucide="inbox" style="width:40px;height:40px;color:var(--color-text-muted);display:block;margin:0 auto var(--spacing-md);"></i>
                     <h3>No plans available yet</h3>
-                    <p>System plans haven't been added by an admin yet. Check back soon or .
-
-                    </p>
-                    <div>
-                        <a href="/user/counselors">find a counselor</a>
-                    </div>
+                    <p>System plans haven't been added by an admin yet. Check back soon or <a href="/user/counselors">find a counselor</a>.</p>
                 </div>
                 <?php else: ?>
                 <div class="plans-grid">
