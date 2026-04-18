@@ -55,6 +55,9 @@
                                     <button class="btn btn-primary session-join-btn" type="button" disabled>Join session</button>
                                 <?php endif; ?>
                                 <button class="btn btn-secondary" type="button" id="openRescheduleModal">Request Reschedule</button>
+                                <?php if ($pendingExtension): ?>
+                                <button class="btn btn-primary" type="button" id="openExtendModalBtn">Review Extension Request</button>
+                                <?php endif; ?>
                             <?php else: ?>
                                 <a class="btn btn-primary" href="/user/counselors?id=<?= (int)$sessionData['counselorId'] ?>">Rebook</a>
                                 <?php if ($sessionData['hasReview']): ?>
@@ -225,6 +228,42 @@
                     <button type="button" class="btn btn-secondary" id="closeNoShowModal2">Cancel</button>
                     <button type="button" class="btn btn-danger" id="submitNoShowBtn">Submit Report</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Extension request modal -->
+    <?php if ($pendingExtension): ?>
+    <div class="session-modal-overlay" id="extendRequestOverlay" style="display:none;">
+        <div class="session-modal" style="max-width:480px;">
+            <div class="session-modal-header">
+                <h3>Session Extension Request</h3>
+                <button type="button" class="session-modal-close" id="closeExtendUserModal">&times;</button>
+            </div>
+            <div class="session-modal-body">
+                <p style="color:var(--color-text-secondary);margin-bottom:var(--spacing-lg);">
+                    Your counselor would like to extend your session. Select an option below to continue.
+                </p>
+                <?php $extOpt = $pendingExtension['options'][0]; ?>
+                <form method="POST" action="/user/sessions?id=<?= (int)$sessionId ?>&ajax=accept_extension">
+                    <input type="hidden" name="extension_id" value="<?= (int)$pendingExtension['extensionId'] ?>">
+                    <input type="hidden" name="duration_minutes" value="<?= (int)$extOpt['duration_minutes'] ?>">
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--color-border);border-radius:var(--radius-md);margin-bottom:var(--spacing-lg);">
+                        <span style="flex:1;font-weight:500;"><?= (int)$extOpt['duration_minutes'] ?> minutes</span>
+                        <span style="color:var(--color-primary);font-weight:600;">LKR <?= number_format((float)$extOpt['fee'], 2) ?></span>
+                    </div>
+                    <p style="font-size:var(--font-size-sm);color:var(--color-text-muted);margin-bottom:var(--spacing-md);text-align:center;">
+                        Expires at <?= date('H:i', strtotime($pendingExtension['expiresAt'])) ?>
+                    </p>
+                    <div class="session-modal-actions">
+                        <button type="button" class="btn btn-secondary" id="declineExtendBtn">Decline</button>
+                        <button type="submit" class="btn btn-primary">Accept &amp; Pay</button>
+                    </div>
+                </form>
+                <form id="declineExtendForm" method="POST" action="/user/sessions?id=<?= (int)$sessionId ?>&ajax=decline_extension" style="display:none;">
+                    <input type="hidden" name="extension_id" value="<?= (int)$pendingExtension['extensionId'] ?>">
+                </form>
             </div>
         </div>
     </div>
@@ -476,6 +515,23 @@
 
         });
     </script>
+
+    <?php if ($pendingExtension): ?>
+    <script>
+    (function () {
+        var overlay    = document.getElementById('extendRequestOverlay');
+        var openBtn    = document.getElementById('openExtendModalBtn');
+        var closeBtn   = document.getElementById('closeExtendUserModal');
+        var declineBtn = document.getElementById('declineExtendBtn');
+        function open()  { overlay.style.display = 'flex'; overlay.offsetHeight; overlay.classList.add('show'); }
+        function close() { overlay.classList.remove('show'); setTimeout(function(){ overlay.style.display='none'; }, 300); }
+        if (openBtn)    openBtn.addEventListener('click', open);
+        if (closeBtn)   closeBtn.addEventListener('click', close);
+        if (overlay)    overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); });
+        if (declineBtn) declineBtn.addEventListener('click', function(){ document.getElementById('declineExtendForm').submit(); });
+    })();
+    </script>
+    <?php endif; ?>
 </body>
 
 </html>

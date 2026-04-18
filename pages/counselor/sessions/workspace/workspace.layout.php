@@ -46,6 +46,10 @@ $pageScripts        = ['/assets/js/counselor/sessions/workspace.js'];
                     <?php endif; ?>
 
                     <?php if (!in_array($session['status'], ['completed', 'cancelled', 'no_show'], true)): ?>
+                        <button type="button" class="btn btn-secondary" id="extendSessionBtn">
+                            <i data-lucide="clock-arrow-up" stroke-width="2" width="16" height="16"></i>
+                            Extend Session
+                        </button>
                         <button type="button" class="btn btn-secondary ws-complete-btn" id="markCompletedBtn">
                             <i data-lucide="check-circle" stroke-width="2" width="16" height="16"></i>
                             Mark as Completed
@@ -193,8 +197,89 @@ $pageScripts        = ['/assets/js/counselor/sessions/workspace.js'];
                 <?php endif; ?>
             </div>
 
+            <!-- ── Extension Requests ── -->
+            <?php if (!empty($extensionRequests)): ?>
+            <div class="cc-section">
+                <div class="cc-section-header">
+                    <h4>Extension Requests</h4>
+                    <button type="button" class="btn btn-secondary" onclick="location.reload()" style="font-size:var(--font-size-xs);">
+                        <i data-lucide="refresh-cw" stroke-width="1.8" width="14" height="14"></i>
+                        Refresh
+                    </button>
+                </div>
+                <table style="width:100%;border-collapse:collapse;font-size:var(--font-size-sm);">
+                    <thead>
+                        <tr style="border-bottom:2px solid var(--color-border);text-align:left;">
+                            <th style="padding:8px 12px;">Duration</th>
+                            <th style="padding:8px 12px;">Fee</th>
+                            <th style="padding:8px 12px;">Status</th>
+                            <th style="padding:8px 12px;">Sent At</th>
+                            <th style="padding:8px 12px;">Responded At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($extensionRequests as $ext): ?>
+                        <tr style="border-bottom:1px solid var(--color-border);">
+                            <td style="padding:8px 12px;"><?= (int)$ext['durationMinutes'] ?> min</td>
+                            <td style="padding:8px 12px;">LKR <?= number_format($ext['fee'], 2) ?></td>
+                            <td style="padding:8px 12px;">
+                                <span class="plan-status status-<?= htmlspecialchars($ext['status']) ?>">
+                                    <?= htmlspecialchars(ucfirst($ext['status'])) ?>
+                                </span>
+                            </td>
+                            <td style="padding:8px 12px;"><?= htmlspecialchars($ext['sentAt'] ?? '—') ?></td>
+                            <td style="padding:8px 12px;"><?= htmlspecialchars($ext['respondedAt'] ?? '—') ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php endif; ?>
+
         </div><!-- /.main-content-body -->
     </section>
+<?php if (!in_array($session['status'], ['completed', 'cancelled', 'no_show'], true)): ?>
+<!-- ── Extend Session modal ── -->
+<div class="session-modal-overlay" id="extendSessionOverlay" style="display:none;">
+    <div class="session-modal">
+        <div class="session-modal-header">
+            <h3>Request Session Extension</h3>
+            <button type="button" class="session-modal-close" id="closeExtendModal">&times;</button>
+        </div>
+        <div class="session-modal-body">
+            <p style="color:var(--color-text-secondary);margin-bottom:var(--spacing-lg);">
+                Select how long you'd like to extend the session. The client will be notified and must accept and pay before the extension begins.
+            </p>
+            <div id="extendOptions" style="display:flex;flex-direction:column;gap:var(--spacing-sm);margin-bottom:var(--spacing-lg);">
+                <?php
+                $counselorFeeRs = Database::search(
+                    "SELECT consultation_fee FROM counselors WHERE counselor_id = $counselorId LIMIT 1"
+                );
+                $counselorFeeRow  = $counselorFeeRs ? $counselorFeeRs->fetch_assoc() : null;
+                $hourlyRate       = (float)($counselorFeeRow['consultation_fee'] ?? 0);
+                $extendOptionList = [
+                    ['duration_minutes' => 30, 'fee' => round($hourlyRate / 2, 2)],
+                    ['duration_minutes' => 60, 'fee' => round($hourlyRate,     2)],
+                ];
+                foreach ($extendOptionList as $opt): ?>
+                <label class="extend-option-label" style="display:flex;align-items:center;gap:var(--spacing-md);padding:var(--spacing-md);border:1px solid var(--color-border);border-radius:var(--radius-md);cursor:pointer;">
+                    <input type="radio" name="extendDuration" value="<?= (int)$opt['duration_minutes'] ?>" style="accent-color:var(--color-primary);">
+                    <span style="flex:1;font-weight:500;"><?= (int)$opt['duration_minutes'] ?> minutes</span>
+                    <span style="color:var(--color-primary);font-weight:600;">LKR <?= number_format($opt['fee'], 2) ?></span>
+                </label>
+                <?php endforeach; ?>
+            </div>
+            <p id="extendError" style="color:#dc2626;font-size:var(--font-size-sm);display:none;margin-bottom:var(--spacing-md);"></p>
+            <p id="extendSuccess" style="color:#16a34a;font-size:var(--font-size-sm);display:none;margin-bottom:var(--spacing-md);"></p>
+            <div class="session-modal-actions">
+                <button type="button" class="btn btn-secondary" id="cancelExtendBtn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="sendExtendBtn">Send Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <?php if (!in_array($session['status'], ['completed', 'cancelled', 'no_show'], true)): ?>
 <div class="session-modal-overlay" id="completeSessionOverlay" style="display:none;">
     <div class="session-modal">
@@ -221,5 +306,61 @@ $pageScripts        = ['/assets/js/counselor/sessions/workspace.js'];
 </main>
 
 <?php require __DIR__ . '/../../common/counselor.footer.php'; ?>
+
+<?php if (!in_array($session['status'], ['completed', 'cancelled', 'no_show'], true)): ?>
+<script>
+(function () {
+    var SESSION_ID = <?= (int)$sessionId ?>;
+    var overlay    = document.getElementById('extendSessionOverlay');
+    var errorEl    = document.getElementById('extendError');
+    var sendBtn    = document.getElementById('sendExtendBtn');
+
+    function openExtend() {
+        overlay.querySelectorAll('input[type=radio]').forEach(function(r){ r.checked = false; });
+        errorEl.style.display = 'none';
+        sendBtn.disabled = false; sendBtn.textContent = 'Send Request';
+        overlay.style.display = 'flex'; overlay.offsetHeight; overlay.classList.add('show');
+    }
+    function closeExtend() {
+        overlay.classList.remove('show');
+        setTimeout(function(){ overlay.style.display = 'none'; }, 300);
+    }
+
+    document.getElementById('extendSessionBtn').addEventListener('click', openExtend);
+    document.getElementById('closeExtendModal').addEventListener('click', closeExtend);
+    document.getElementById('cancelExtendBtn').addEventListener('click', closeExtend);
+    overlay.addEventListener('click', function(e){ if (e.target === overlay) closeExtend(); });
+
+    sendBtn.addEventListener('click', function () {
+        var selected = overlay.querySelector('input[name=extendDuration]:checked');
+        if (!selected) {
+            errorEl.textContent = 'Please select an extension duration.';
+            errorEl.style.display = 'block';
+            return;
+        }
+        sendBtn.disabled = true; sendBtn.textContent = 'Sending…';
+        var fd = new FormData();
+        fd.append('session_id', SESSION_ID);
+        fd.append('duration_minutes', selected.value);
+        fetch('/counselor/sessions/workspace?ajax=request_extension&session_id=' + SESSION_ID, { method:'POST', body:fd })
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+            if (data.success) {
+                location.reload();
+            } else {
+                errorEl.textContent = data.error || 'Could not send request.';
+                errorEl.style.display = 'block';
+                sendBtn.disabled = false; sendBtn.textContent = 'Send Request';
+            }
+        })
+        .catch(function(){
+            errorEl.textContent = 'Network error. Please try again.';
+            errorEl.style.display = 'block';
+            sendBtn.disabled = false; sendBtn.textContent = 'Send Request';
+        });
+    });
+})();
+</script>
+<?php endif; ?>
 </body>
 </html>
