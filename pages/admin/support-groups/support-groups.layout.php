@@ -29,7 +29,6 @@ require_once __DIR__ . '/../common/admin.html.head.php';
                 <thead class="admin-table-header">
                     <tr class="admin-table-row">
                         <th class="admin-table-th">Group Name</th>
-                        <th class="admin-table-th">Type</th>
                         <th class="admin-table-th">Members</th>
                         <th class="admin-table-th">Next Session</th>
                         <th class="admin-table-th">Created By</th>
@@ -43,7 +42,6 @@ require_once __DIR__ . '/../common/admin.html.head.php';
                                 <strong><?= htmlspecialchars($group['groupName']) ?></strong><br>
                                 <small><?= htmlspecialchars($group['description']) ?></small>
                             </td>
-                            <td class="admin-table-td"><?= htmlspecialchars($group['type']) ?></td>
                             <td class="admin-table-td"><?= $group['members'] ?></td>
                             <td class="admin-table-td"><?= htmlspecialchars($group['nextSession']) ?></td>
                             <td class="admin-table-td"><?= htmlspecialchars($group['createdBy']) ?></td>

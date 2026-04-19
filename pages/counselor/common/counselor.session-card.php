@@ -8,7 +8,7 @@ $clientName  = $session['userName'] ?? 'Client';
 $clientAvatar = $session['userAvatar'] ?? '/assets/img/avatar.png';
 $sessionType = $session['sessionType'] ?? 'video';
 $status      = $session['status'] ?? ($isUpcoming ? 'scheduled' : 'completed');
-
+$sessionNote=$session['sessionNotes'] ?? '';
 $typeLabel = match ($sessionType) {
     'in_person' => 'In Person',
     'audio'     => 'Audio',
@@ -30,10 +30,36 @@ $typeLabel = match ($sessionType) {
             </div>
         <?php else: ?>
             <div class="session-action-row">
-                <button class="btn-join" type="button">View Notes</button>
+                <button class="btn-join" type="button" onclick="showNotesPopup(<?= (int)$session['sessionId'] ?>)">View Notes</button>
+                <div id="notesPopup-<?= (int)$session['sessionId'] ?>" class="notes-popup">
+                    <div class="notes-popup-content">
+                        <div class="notes-popup-close">
+                            <span onclick="closeNotesPopup(<?= (int)$session['sessionId'] ?>)" style="cursor:pointer;">&times;</span>
+                        </div>
+                        <?php if(!empty($sessionNote)):?>
+                            <div class="notes-popup-text">
+                                <p><?= htmlspecialchars($sessionNote) ?></p>
+                            </div>
+                        <?php else:?>
+                            <div class="notes-popup-text">
+                                <p>No Session Notes</p>
+                            </div>
+                        <?php endif; ?>
+                        
+                    </div>
+                </div>
                 <button class="btn-warning" type="button">Report</button>
             </div>
         <?php endif; ?>
     </div>
     <img src="<?= htmlspecialchars($clientAvatar) ?>" alt="<?= htmlspecialchars($clientName) ?>" class="counselors-image" onerror="this.src='/assets/img/avatar.png'" />
 </div>
+<script>
+    function showNotesPopup(id) {
+    document.getElementById('notesPopup-' + id).style.display = 'block';
+    }
+    function closeNotesPopup(id) {
+        document.getElementById('notesPopup-' + id).style.display = 'none';
+    }
+
+</script>

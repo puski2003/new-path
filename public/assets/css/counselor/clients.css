@@ -115,6 +115,7 @@
 }
 
 .cc-toolbar .search-bar {
+    margin-top: 0 !important;
     flex: 1;
     max-width: 400px;
 }

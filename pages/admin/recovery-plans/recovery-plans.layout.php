@@ -45,7 +45,7 @@ require_once __DIR__ . '/../common/admin.html.head.php';
                                     <small><?= htmlspecialchars($plan['description']) ?></small>
                                 </td>
                                 <td class="admin-table-td"><?= htmlspecialchars($plan['category']) ?></td>
-                                <td class="admin-table-td"><?= $plan['adoptionRate'] ?>%</td>
+                                <td class="admin-table-td"><?= $plan['adoptionCount'] ?>%</td>
                                 <td class="admin-table-td"><?= htmlspecialchars($plan['createdBy']) ?></td>
                                 <td class="admin-table-td"><?= htmlspecialchars($plan['lastUpdated']) ?></td>
                             </tr>

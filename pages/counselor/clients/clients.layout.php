@@ -4,12 +4,11 @@ $pageHeaderTitle    = 'Clients';
 $pageHeaderSubtitle = 'Your client directory';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> 
 <?php $pageTitle = 'Clients'; $pageStyle = ['counselor/clients']; require __DIR__ . '/../common/counselor.html.head.php'; ?>
 <body>
 <main class="main-container theme-counselor">
     <?php require __DIR__ . '/../common/counselor.sidebar.php'; ?>
-
     <section class="main-content">
         <?php require __DIR__ . '/../common/counselor.page-header.php'; ?>
 
@@ -42,6 +41,20 @@ $pageHeaderSubtitle = 'Your client directory';
         </div>
     </section>
 </main>
-<script>lucide.createIcons();</script>
+<script>
+    lucide.createIcons();
+
+    const searchInput = document.getElementById('clientSearch');
+
+    searchInput.addEventListener('input', function () {
+        const query = this.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('.cc-client-row');
+
+        rows.forEach(row => {
+            const name = row.dataset.name ?? '';
+            row.style.display = name.includes(query) ? '' : 'none';
+        });
+    });
+</script>
 </body>
 </html>

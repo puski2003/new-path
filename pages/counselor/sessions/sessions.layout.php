@@ -19,7 +19,7 @@ $pageScripts = [
             <div class="inner-body-content">
                 <div class="body-column">
 
-                    <?php require __DIR__ . '/../common/counselor.toolbar.php'; ?>
+                    <!-- <?php require __DIR__ . '/../common/counselor.toolbar.php'; ?> -->
 
                     <div class="dashboard-card counselor-tab-card">
                         <div class="counselor-tab-row">

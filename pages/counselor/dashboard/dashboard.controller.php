@@ -7,7 +7,9 @@ $flashSuccess = isset($_GET['updateSuccess']) ? 'Profile updated successfully.' 
 $counselorId = (int) ($user['counselorId'] ?? 0);
 $currentCounselor = CounselorDashboardModel::getCounselorById($counselorId) ?? $currentCounselor;
 $upcomingSessions = CounselorDashboardModel::getUpcomingSessionsByCounselor($counselorId);
-$activeClients = CounselorDashboardModel::getActiveClientsCount($counselorId);
+$activeClientsCount = CounselorDashboardModel::getActiveClientsCount($counselorId);
+$activeClients=CounselorDashboardModel::getActiveClients($counselorId);
+
 $totalIncome = CounselorDashboardModel::getTotalIncome($counselorId);
 $clientActivities = CounselorDashboardModel::getClientActivities($counselorId);
 

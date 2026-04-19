@@ -39,7 +39,7 @@ class SupportGroupsModel
                 'groupId' => (int) $row['group_id'],
                 'groupName' => $row['name'] ?? '',
                 'description' => $row['description'] ?? '',
-                'type' => !empty($row['meeting_link']) ? 'Public' : 'Private',
+                // 'type' => !empty($row['meeting_link']) ? 'Public' : 'Private',
                 'members' => (int) ($row['member_count'] ?? 0),
                 'nextSession' => $row['meeting_schedule'] ?? 'To be scheduled',
                 'createdBy' => $row['admin_name'] ?? 'Admin',
@@ -78,17 +78,16 @@ class SupportGroupsModel
 
     public static function createGroup(array $input, int $adminUserId): bool
     {
-        $adminId = self::getAdminIdByUserId($adminUserId);
+        $adminId = self::getAdminIdByUserId($adminUserId); 
         $maxMembers = is_numeric($input['max_members'] ?? null) ? (int) $input['max_members'] : 'NULL';
 
         Database::iud(
             "INSERT INTO support_groups
-                (name, description, category, meeting_schedule, meeting_link, max_members, is_active, created_by, created_at, updated_at)
+                (name, description, category, meeting_link, max_members, is_active, created_by, created_at, updated_at)
              VALUES
                 ('" . self::esc($input['name'] ?? '') . "',
                  '" . self::esc($input['description'] ?? '') . "',
                  '" . self::esc($input['category'] ?? '') . "',
-                 '" . self::esc($input['meeting_schedule'] ?? '') . "',
                  '" . self::esc($input['meeting_link'] ?? '') . "',
                  $maxMembers,
                  1,

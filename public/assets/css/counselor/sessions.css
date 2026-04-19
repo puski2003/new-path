@@ -229,3 +229,81 @@
 .theme-counselor .session-modal-actions .btn-primary { background: var(--color-primary); color: #fff; }
 .theme-counselor .session-modal-actions .btn-secondary { background: rgba(79, 127, 150, 0.12); color: var(--color-text-primary); }
 .theme-counselor .session-modal-actions .btn-danger { background: #dc2626; color: #fff; }
+
+
+
+.notes-popup,.report-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0; 
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+}
+
+.notes-popup-content,.report-popup-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: white;
+    padding: 20px;
+    margin: 15% auto;
+    width: 300px;
+    border-radius: 20px;
+}
+.notes-popup-content{
+    height: 200px;
+    text-align: center;
+}
+.report-popup-content{
+    height: 200px;
+}
+.notes-popup-close,.report-popup-close{
+    position: absolute;
+    right:20px;
+    top:20px;
+    
+
+}
+.notes-popup-close span,.report-popup-close span{
+    font-size: 30px !important;
+    color: var(--color-primary) !important;
+}
+
+.notes-popup-text{
+    width: 100%;
+    height: 100%;
+    display: flex;    
+    align-items: center;
+    justify-content: center;
+
+}
+
+.report-popup-form{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /* padding: 20px 20px 0px 20px; */
+    justify-content: center;
+    gap: 5px;
+}
+
+.report-popup-form button{
+    background-color: #ffbcbc;
+    color: black;
+    font-size: 15px;
+    padding: 5px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+}
+
+.report-popup-form select,.report-popup-form textarea{
+    border-radius: 5px;
+    border: solid 1px #ffbcbc;
+}
+.report-popup-form textarea::placeholder{
+    padding-left: 5px;
+}

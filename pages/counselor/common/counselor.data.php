@@ -449,11 +449,9 @@ class CounselorData
     public static function deletePlan(int $counselorId, int $planId): bool
     {
         Database::iud(
-            "UPDATE recovery_plans
-             SET status = 'cancelled', updated_at = NOW()
-             WHERE plan_id = $planId
-               AND counselor_id = $counselorId
-               AND status <> 'cancelled'"
+            "DELETE FROM recovery_plans
+            WHERE plan_id = $planId
+            AND counselor_id = $counselorId"
         );
         return true;
     }

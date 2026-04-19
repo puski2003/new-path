@@ -88,7 +88,7 @@ if (!is_array($savedAvailability)) {
 
                 <div class="form-divider"></div>
                 <h4 class="form-section-title">Availability Schedule</h4>
-                <p class="form-help">Toggle days on/off. Add multiple time slots per day (e.g. 9–12 and 14–17).</p>
+                <p class="form-help">Toggle days on/off. Add multiple time slots per day (e.g. 9-12 and 14-17).</p>
 
                 <?php
                 // Helper: render <option> tags for hours 06:00–22:00

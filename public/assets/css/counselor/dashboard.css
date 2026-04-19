@@ -299,6 +299,22 @@
     overflow-wrap: anywhere;
 }
 
+.theme-counselor .active-clients-card{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    background: white;
+    border: 1px solid rgba(79, 127, 150, 0.16);
+}
+.theme-counselor .active-clients-card a{
+    text-decoration: none;
+    color: black;
+}
+
 /* ── Responsive ── */
 @media (max-width: 1200px) {
     .theme-counselor .calendar-container {
