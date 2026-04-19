@@ -7,8 +7,12 @@
  */
 require_once __DIR__ . '/dashboard.model.php';
 require_once __DIR__ . '/../recovery/recovery.model.php';
+require_once ROOT . '/core/NotificationService.php';
 
 $userId = (int) $user['id'];
+
+// Fire the missed-task reminder check for this user (deduped to once per 24 h).
+UserDashboardModel::checkAndNotifyMissedTasks($userId);
 
 // Flash messages
 $flashSuccess = isset($_GET['updateSuccess'])   ? 'Profile updated successfully.'  :

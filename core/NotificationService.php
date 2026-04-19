@@ -52,6 +52,114 @@ class NotificationService
         );
     }
 
+    /**
+     * Insert a notification row. Skips silently if an identical unread
+     * notification of the same type was already sent within $dedupHours hours.
+     */
+    public static function send(
+        int    $userId,
+        string $type,
+        string $title,
+        string $message,
+        string $link       = '',
+        int    $dedupHours = 24
+    ): void {
+        Database::setUpConnection();
+        $conn    = Database::$connection;
+        $eType   = $conn->real_escape_string($type);
+        $eTitle  = $conn->real_escape_string($title);
+        $eMsg    = $conn->real_escape_string($message);
+        $eLink   = $conn->real_escape_string($link);
+
+        if ($dedupHours > 0) {
+            $rs = Database::search(
+                "SELECT 1 FROM notifications
+                 WHERE user_id = $userId
+                   AND type    = '$eType'
+                   AND is_read = 0
+                   AND created_at >= NOW() - INTERVAL $dedupHours HOUR
+                 LIMIT 1"
+            );
+            if ($rs && $rs->num_rows > 0) return;
+        }
+
+        Database::iud(
+            "INSERT INTO notifications (user_id, type, title, message, link)
+             VALUES ($userId, '$eType', '$eTitle', '$eMsg', '$eLink')"
+        );
+    }
+
+    // -------------------------------------------------------------------------
+    // Missed-task reminders
+    // Tune the two defaults below to change behaviour for the whole app:
+    //   $windowDays    — how many past days to look at          (default 7)
+    //   $missThreshold — days with missed tasks needed to fire  (default 3)
+    // -------------------------------------------------------------------------
+
+    /**
+     * Check one user and send a task_reminder if they've missed enough days.
+     * Called on dashboard load — fast (one query) and deduped to once per 24 h.
+     */
+    public static function remindIfMissedTasks(
+        int $userId,
+        int $windowDays    = 7,
+        int $missThreshold = 3
+    ): void {
+        $rs = Database::search(
+            "SELECT COUNT(DISTINCT rt.due_date) AS missed_days
+             FROM recovery_tasks rt
+             JOIN recovery_plans rp ON rp.plan_id = rt.plan_id
+             WHERE rp.user_id  = $userId
+               AND rp.status   = 'active'
+               AND rt.due_date BETWEEN CURDATE() - INTERVAL $windowDays DAY
+                                       AND CURDATE() - INTERVAL 1 DAY
+               AND rt.status  != 'completed'"
+        );
+        if (!$rs) return;
+        $row = $rs->fetch_assoc();
+        if (!$row || (int)$row['missed_days'] < $missThreshold) return;
+
+        $missed  = (int)$row['missed_days'];
+        $message = "You've missed tasks on $missed of the last $windowDays days. "
+                 . 'Small steps every day make a big difference — check your plan now.';
+
+        self::send($userId, 'task_reminder', 'Stay on track with your recovery',
+                   $message, '/user/recovery', 24);
+    }
+
+    /**
+     * Check ALL active-plan users and fire reminders where needed.
+     * Intended for a daily cron job (cron/task-reminder.php).
+     */
+    public static function remindAllMissedTasks(
+        int $windowDays    = 7,
+        int $missThreshold = 3
+    ): void {
+        $rs = Database::search(
+            "SELECT rp.user_id,
+                    COUNT(DISTINCT rt.due_date) AS missed_days
+             FROM recovery_tasks rt
+             JOIN recovery_plans rp ON rp.plan_id = rt.plan_id
+             WHERE rp.status    = 'active'
+               AND rt.due_date  BETWEEN CURDATE() - INTERVAL $windowDays DAY
+                                        AND CURDATE() - INTERVAL 1 DAY
+               AND rt.status   != 'completed'
+             GROUP BY rp.user_id
+             HAVING missed_days >= $missThreshold"
+        );
+        if (!$rs) return;
+
+        while ($row = $rs->fetch_assoc()) {
+            $userId  = (int)$row['user_id'];
+            $missed  = (int)$row['missed_days'];
+            $message = "You've missed tasks on $missed of the last $windowDays days. "
+                     . 'Small steps every day make a big difference — check your plan now.';
+
+            self::send($userId, 'task_reminder', 'Stay on track with your recovery',
+                       $message, '/user/recovery', 24);
+        }
+    }
+
     private static function timeAgo(int $ts): string
     {
         $diff = time() - $ts;

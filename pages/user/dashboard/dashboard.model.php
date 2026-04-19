@@ -185,4 +185,13 @@ class UserDashboardModel
             'sevenDays'   => $daysSober >= 7,
         ];
     }
+
+    /**
+     * Delegates to NotificationService::remindIfMissedTasks().
+     * Tune window/threshold there (or pass arguments here).
+     */
+    public static function checkAndNotifyMissedTasks(int $userId): void
+    {
+        NotificationService::remindIfMissedTasks($userId);
+    }
 }
