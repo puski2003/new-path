@@ -1,17 +1,18 @@
 <?php
 require_once __DIR__ . '/../../../common/user.head.php';
-require_once __DIR__ . '/../../recovery.model.php';
+require_once __DIR__ . '/goal-update.model.php';
 
-if (!Request::isPost()) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     Response::redirect('/user/recovery/goals');
+    exit;
 }
 
-$goalId      = (int)(Request::post('goal_id') ?? 0);
-$title       = trim(Request::post('title') ?? '');
-$goalType    = Request::post('goal_type') ?? 'short_term';
-$targetDays  = (int)(Request::post('target_days') ?? 0);
-$description = trim(Request::post('description') ?? '');
+$goalId = (int)($_POST['goal_id'] ?? 0);
+$title = trim($_POST['title'] ?? '');
+$goalType = $_POST['goal_type'] ?? 'short_term';
+$targetDays = (int)($_POST['target_days'] ?? 0);
+$description = trim($_POST['description'] ?? '');
 
-RecoveryModel::updateGoal($goalId, (int)$user['id'], $title, $goalType, $targetDays, $description);
+GoalUpdateModel::update($goalId, (int)$user['id'], $title, $goalType, $targetDays, $description);
 
-Response::redirect('/user/recovery/goals?updated=1');
+Response::redirect('/user/recovery/goals?status=success&msg=updated');

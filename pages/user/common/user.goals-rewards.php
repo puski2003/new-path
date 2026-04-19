@@ -6,7 +6,7 @@
     <?php if (!empty($shortTermGoal)): ?>
         <div class="goal-item">
             <div class="goal-header">
-                <span class="goal-title"><?= htmlspecialchars($shortTermGoal['title']) ?></span>
+                <span class="goal-title"><?= htmlspecialchars(mb_strimwidth($shortTermGoal['title'], 0, 30, '…')) ?></span>
                 <span class="goal-days"><?= (int)$shortTermGoal['currentProgress'] ?>/<?= (int)$shortTermGoal['targetDays'] ?> Days</span>
             </div>
             <div class="progress-bar">
@@ -26,7 +26,7 @@
     <?php if (!empty($longTermGoal)): ?>
         <div class="goal-item">
             <div class="goal-header">
-                <span class="goal-title"><?= htmlspecialchars($longTermGoal['title']) ?></span>
+                <span class="goal-title"><?= htmlspecialchars(mb_strimwidth($longTermGoal['title'], 0, 30, '…')) ?></span>
                 <span class="goal-days"><?= (int)$longTermGoal['currentProgress'] ?>/<?= (int)$longTermGoal['targetDays'] ?> Days</span>
             </div>
             <div class="progress-bar">

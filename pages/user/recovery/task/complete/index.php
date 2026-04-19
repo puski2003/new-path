@@ -1,37 +1,31 @@
 <?php
 require_once __DIR__ . '/../../../common/user.head.php';
-require_once __DIR__ . '/../../recovery.model.php';
+require_once __DIR__ . '/task-complete.model.php';
 
-if (!Request::isPost()) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     Response::redirect('/user/recovery');
+    exit;
 }
 
-$taskId   = (int)(Request::post('taskId') ?? 0);
-$returnTo = Request::post('returnTo') ?? '';
+$taskId = (int)($_POST['taskId'] ?? 0);
+$returnTo = $_POST['returnTo'] ?? '';
+$userId = (int)$user['id'];
 
 $result = false;
 if ($taskId > 0) {
-    $result = RecoveryModel::completeTask($taskId, (int)$user['id']);
+    $result = TaskCompleteModel::complete($taskId, $userId);
 }
 
 if ($result) {
-    RecoveryModel::checkAndAwardAchievements((int)$user['id']);
-
-    // Check if completing this task finished the whole plan
-    $planRs = Database::search(
-        "SELECT rp.plan_id, rp.status
-         FROM recovery_tasks rt
-         INNER JOIN recovery_plans rp ON rp.plan_id = rt.plan_id
-         WHERE rt.task_id = $taskId
-         LIMIT 1"
-    );
-    if ($planRs && ($planRow = $planRs->fetch_assoc()) && $planRow['status'] === 'completed') {
-        Response::redirect('/user/recovery/plan-completed?planId=' . (int)$planRow['plan_id']);
+    TaskCompleteModel::checkAndAwardAchievements($userId);
+    $completedPlan = TaskCompleteModel::checkPlanCompleted($taskId);
+    if ($completedPlan) {
+        Response::redirect('/user/recovery/plan-completed?planId=' . (int)$completedPlan['plan_id']);
     }
 }
 
 if ($returnTo === 'dashboard') {
-    Response::redirect($result ? '/user/dashboard?taskCompleted=1' : '/user/dashboard?taskBlocked=1');
+    Response::redirect($result ? '/user/dashboard?status=success' : '/user/dashboard?status=error');
 } else {
-    Response::redirect($result ? '/user/recovery?taskCompleted=1' : '/user/recovery?taskBlocked=1');
+    Response::redirect($result ? '/user/recovery?status=success' : '/user/recovery?status=error&msg=task_blocked');
 }
