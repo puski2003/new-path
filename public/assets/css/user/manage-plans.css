@@ -43,7 +43,7 @@
     display: flex;
     flex-direction: column;
     gap: 32px;
-    max-width: 800px;
+    
     padding: 50px;
 }
 
@@ -206,37 +206,7 @@
     gap: 12px;
 }
 
-/* Buttons */
-.btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    display: inline-block;
-}
 
-.btn-primary {
-    background: var(--color-primary);
-    color: white;
-}
-
-.btn-primary:hover {
-    opacity: 0.9;
-}
-
-.btn-secondary {
-    background: var(--color-bg-light-green);
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border-primary);
-}
-
-.btn-secondary:hover {
-    background: var(--color-primary-light);
-}
 
 /* Empty State */
 .empty-state {

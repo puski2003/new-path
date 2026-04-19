@@ -414,8 +414,138 @@ $specialties = [
 <script>
 function showFileName(input) {
     var display = document.getElementById('fileNameDisplay');
-    display.textContent = input.files.length > 0 ? '✓ ' + input.files[0].name : '';
+    if (input.files.length === 0) { display.textContent = ''; return; }
+    var file = input.files[0];
+    var maxSize = 10 * 1024 * 1024;
+    var allowed = ['jpg','jpeg','png','pdf','doc','docx'];
+    var ext = file.name.split('.').pop().toLowerCase();
+    if (!allowed.includes(ext)) {
+        display.textContent = '✗ Invalid file type. Use PDF, DOC, DOCX, JPG, or PNG.';
+        display.style.color = '#f44336';
+        input.value = '';
+        return;
+    }
+    if (file.size > maxSize) {
+        display.textContent = '✗ File exceeds 10 MB limit.';
+        display.style.color = '#f44336';
+        input.value = '';
+        return;
+    }
+    display.textContent = '✓ ' + file.name;
+    display.style.color = '';
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.querySelector('form[enctype="multipart/form-data"]');
+    if (!form) return;
+
+    function showFieldError(fieldId, msg) {
+        var el = document.getElementById(fieldId);
+        if (!el) return;
+        el.style.borderColor = '#f44336';
+        var errId = fieldId + '_err';
+        var existing = document.getElementById(errId);
+        if (!existing) {
+            var div = document.createElement('div');
+            div.id = errId;
+            div.style.cssText = 'color:#f44336;font-size:13px;margin-top:4px;';
+            el.parentNode.insertBefore(div, el.nextSibling);
+            existing = div;
+        }
+        existing.textContent = msg;
+    }
+
+    function clearFieldError(fieldId) {
+        var el = document.getElementById(fieldId);
+        if (el) el.style.borderColor = '';
+        var err = document.getElementById(fieldId + '_err');
+        if (err) err.textContent = '';
+    }
+
+    var requiredFields = [
+        { id: 'fullName',   msg: 'Full name is required.' },
+        { id: 'email',      msg: 'Email address is required.' },
+        { id: 'phoneNumber', msg: 'Phone number is required.' },
+        { id: 'specialty',  msg: 'Please select your specialty.' },
+        { id: 'bio',        msg: 'Professional bio is required.' },
+        { id: 'education',  msg: 'Education is required.' },
+    ];
+
+    requiredFields.forEach(function(f) {
+        var el = document.getElementById(f.id);
+        if (!el) return;
+        el.addEventListener('input', function() { clearFieldError(f.id); });
+        el.addEventListener('change', function() { clearFieldError(f.id); });
+    });
+
+    form.addEventListener('submit', function(e) {
+        var valid = true;
+
+        requiredFields.forEach(function(f) {
+            clearFieldError(f.id);
+            var el = document.getElementById(f.id);
+            if (!el || !el.value.trim()) {
+                showFieldError(f.id, f.msg);
+                valid = false;
+            }
+        });
+
+        var email = document.getElementById('email');
+        if (email && email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+            showFieldError('email', 'Please enter a valid email address.');
+            valid = false;
+        }
+
+        var phone = document.getElementById('phoneNumber');
+        if (phone && phone.value.trim() && !/^[+\d\s\-()]{7,20}$/.test(phone.value.trim())) {
+            showFieldError('phoneNumber', 'Please enter a valid phone number.');
+            valid = false;
+        }
+
+        var expYears = document.getElementById('experienceYears');
+        if (expYears && expYears.value !== '') {
+            var yrs = parseInt(expYears.value);
+            if (isNaN(yrs) || yrs < 0 || yrs > 50) {
+                showFieldError('experienceYears', 'Experience must be between 0 and 50 years.');
+                valid = false;
+            }
+        }
+
+        var fee = document.getElementById('consultationFee');
+        if (fee && fee.value !== '') {
+            var feeVal = parseFloat(fee.value);
+            if (isNaN(feeVal) || feeVal < 0) {
+                showFieldError('consultationFee', 'Consultation fee must be a positive number.');
+                valid = false;
+            }
+        }
+
+        var anyDayEnabled = document.querySelector('input[name$="_enabled"]:checked');
+        if (!anyDayEnabled) {
+            var availSection = document.querySelector('.ca-avail-list');
+            if (availSection) {
+                var availErr = document.getElementById('availError');
+                if (!availErr) {
+                    availErr = document.createElement('div');
+                    availErr.id = 'availError';
+                    availErr.style.cssText = 'color:#f44336;font-size:13px;margin-top:8px;';
+                    availSection.appendChild(availErr);
+                }
+                availErr.textContent = 'Please select at least one available day.';
+            }
+            valid = false;
+        } else {
+            var availErr = document.getElementById('availError');
+            if (availErr) availErr.textContent = '';
+        }
+
+        if (!valid) {
+            var firstError = form.querySelector('[style*="border-color: rgb(244, 67, 54)"], [style*="border-color:#f44336"]');
+            if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            e.preventDefault();
+        }
+    });
+});
 </script>
 
 </body>

@@ -72,7 +72,7 @@ $pageStyle = ['user/dashboard', 'user/manage-plans', 'user/recovery'];
         </div>
 
         <div class="main-content-body">
-            <div class="plans-container" style="max-width:900px;">
+            <div class="plans-container" >
 
                 <?php if (($plan['assignedStatus'] ?? '') === 'pending'): ?>
                 <div style="display:flex;gap:12px;margin-bottom:var(--spacing-lg);">

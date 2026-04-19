@@ -53,7 +53,7 @@ require_once __DIR__ . '/../common/auth.head.php';
                         <div class="error-message"><?= htmlspecialchars($error) ?></div>
                     <?php endif; ?>
 
-                    <form method="POST" action="/auth/reset-password?token=<?= urlencode($token) ?>">
+                    <form method="POST" action="/auth/reset-password?token=<?= urlencode($token) ?>" id="resetPasswordForm" novalidate>
 
                         <div class="form-group">
                             <label for="password">New password</label>
@@ -65,6 +65,7 @@ require_once __DIR__ . '/../common/auth.head.php';
                                     class="form-input"
                                     placeholder="At least 8 characters"
                                     required
+                                    minlength="8"
                                     autofocus>
                                 <button type="button" class="password-toggle" id="passwordToggle">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -73,6 +74,7 @@ require_once __DIR__ . '/../common/auth.head.php';
                                     </svg>
                                 </button>
                             </div>
+                            <div class="field-error" id="passwordError" style="color:#f44336;font-size:13px;margin-top:4px;display:none;"></div>
                         </div>
 
                         <div class="form-group">
@@ -92,6 +94,7 @@ require_once __DIR__ . '/../common/auth.head.php';
                                     </svg>
                                 </button>
                             </div>
+                            <div class="field-error" id="confirmError" style="color:#f44336;font-size:13px;margin-top:4px;display:none;"></div>
                         </div>
 
                         <button type="submit" class="form-submit-btn">Set new password</button>
@@ -126,6 +129,62 @@ require_once __DIR__ . '/../common/auth.head.php';
                 }
             });
         });
+
+        var form    = document.getElementById('resetPasswordForm');
+        var pw      = document.getElementById('password');
+        var pwConf  = document.getElementById('password_confirm');
+        var pwErr   = document.getElementById('passwordError');
+        var confErr = document.getElementById('confirmError');
+
+        function showErr(el, msg) { el.textContent = msg; el.style.display = 'block'; }
+        function clearErr(el) { el.textContent = ''; el.style.display = 'none'; }
+
+        if (pw) {
+            pw.addEventListener('input', function () {
+                clearErr(pwErr);
+                if (pwConf.value && pwConf.value !== pw.value) {
+                    showErr(confErr, 'Passwords do not match.');
+                } else {
+                    clearErr(confErr);
+                }
+            });
+        }
+
+        if (pwConf) {
+            pwConf.addEventListener('input', function () {
+                if (pw.value && pwConf.value !== pw.value) {
+                    showErr(confErr, 'Passwords do not match.');
+                } else {
+                    clearErr(confErr);
+                }
+            });
+        }
+
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                var valid = true;
+                clearErr(pwErr);
+                clearErr(confErr);
+
+                if (!pw.value) {
+                    showErr(pwErr, 'Password is required.');
+                    valid = false;
+                } else if (pw.value.length < 8) {
+                    showErr(pwErr, 'Password must be at least 8 characters.');
+                    valid = false;
+                }
+
+                if (!pwConf.value) {
+                    showErr(confErr, 'Please confirm your password.');
+                    valid = false;
+                } else if (pw.value !== pwConf.value) {
+                    showErr(confErr, 'Passwords do not match.');
+                    valid = false;
+                }
+
+                if (!valid) e.preventDefault();
+            });
+        }
     });
     </script>
 </body>
