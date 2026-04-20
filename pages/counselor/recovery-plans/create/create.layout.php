@@ -193,7 +193,6 @@ $pageScripts = [
                 <!-- Actions -->
                 <div class="rp-action-bar">
                     <button type="submit" class="btn btn-primary">Save Plan</button>
-                    <button type="button" class="btn btn-secondary" onclick="exportPDF()">Export PDF</button>
                 </div>
 
             </form>

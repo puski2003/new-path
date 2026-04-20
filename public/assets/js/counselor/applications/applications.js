@@ -44,19 +44,23 @@ function validateForm() {
         valid = false;
     }
 
-    if (!email.value.trim()) {
+    const emailValue = email.value.trim();
+
+    if (!emailValue) {
         showError(email, 'Email address is required.');
         valid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    } else if (!emailValue.includes('@') || !emailValue.includes('.')) {
         showError(email, 'Please enter a valid email address.');
         valid = false;
     }
 
+    const phoneRegex = /^(?:\+94|0)?7[0-9]{8}$/;
+
     if (!phoneNumber.value.trim()) {
         showError(phoneNumber, 'Phone number is required.');
         valid = false;
-    } else if (!/^\+?[\d\s\-]{7,15}$/.test(phoneNumber.value)) {
-        showError(phoneNumber, 'Please enter a valid phone number.');
+    } else if (!phoneRegex.test(phoneNumber.value.trim())) {
+        showError(phoneNumber, 'Enter a valid Sri Lankan mobile number (e.g. 0771234567 or +94771234567).');
         valid = false;
     }
 
@@ -76,11 +80,29 @@ function validateForm() {
     }
 
     if (fileInput && fileInput.files.length > 0) {
-        const allowed = ['application/pdf', 'application/msword', 'image/jpeg', 'image/png'];
-        if (!allowed.includes(fileInput.files[0].type)) {
-            showError(fileInput, 'Only PDF, DOC, DOCX, JPG or PNG files are allowed.');
+
+        const file = fileInput.files[0];
+
+        const allowedExtensions = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
+        const allowedTypes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'image/jpeg',
+            'image/png'
+        ];
+
+        const ext = file.name.split('.').pop().toLowerCase();
+
+        if (!allowedExtensions.includes(ext)) {
+            showError(fileInput, 'Invalid file extension.');
             valid = false;
-        } else if (fileInput.files[0].size > 10 * 1024 * 1024) {
+        }
+        else if (!allowedTypes.includes(file.type)) {
+            showError(fileInput, 'Invalid file type.');
+            valid = false;
+        }
+        else if (file.size > 10 * 1024 * 1024) {
             showError(fileInput, 'File must be under 10 MB.');
             valid = false;
         }
