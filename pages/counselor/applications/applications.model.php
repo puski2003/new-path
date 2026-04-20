@@ -9,18 +9,13 @@ class CounselorApplicationsModel
         return CounselorData::createApplication($input);
     }
 
-    /**
-     * Upload a supporting document (certificate / license) for a counselor application.
-     * Accepts JPG, PNG, PDF, DOC, DOCX. Max 10 MB.
-     * Returns the stored path on success, null on failure.
-     */
     public static function handleDocumentUpload(array $file): ?string
     {
         if (empty($file) || !isset($file['tmp_name']) || (int)($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
             return null;
         }
 
-        $maxBytes = 10 * 1024 * 1024; // 10 MB
+        $maxBytes = 10 * 1024 * 1024; 
         if ((int)$file['size'] > $maxBytes || (int)$file['size'] <= 0) {
             return null;
         }

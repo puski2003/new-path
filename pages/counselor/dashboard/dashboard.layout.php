@@ -39,7 +39,7 @@ require_once __DIR__ . '/../common/counselor.html.head.php';
                 <div class="card days-sober-card" style="width: 200px;">
                     <div class="days-sober-content">
                         <p>Active Clients</p>
-                        <h1><?= htmlspecialchars((string) (!empty($activeClients) ? $activeClients : ($currentCounselor['totalClients'] ?? 0))) ?></h1>
+                        <h1><?= htmlspecialchars((string) (!empty($activeClientsCount) ? $activeClientsCount : ($currentCounselor['totalClients'] ?? 0))) ?></h1>
                     </div>
                     <p>Total</p>
                 </div>
@@ -94,7 +94,7 @@ require_once __DIR__ . '/../common/counselor.html.head.php';
                     <div class="col-2-row-1 dashboard-card counselor-upcoming-section">
                         <div class="card-header">
                             <h3>Upcoming Sessions</h3>
-                        </div>
+                        </div> 
                         <div class="counselor-session-list">
                             <?php if (!empty($upcomingSessions)): ?>
                                 <?php foreach ($upcomingSessions as $session): ?>
@@ -109,6 +109,24 @@ require_once __DIR__ . '/../common/counselor.html.head.php';
                                 </div>
                             <?php endif; ?>
                         </div>
+                    </div>
+                    <div class="col-2-row-2 dashboard-card">
+                        <div class="card-header">
+                            <h3>Active Clients</h3>
+                        </div>
+                        <?php if(!empty($activeClients)): ?>
+                            <?php foreach($activeClients as $client): ?>
+                                <div class="active-clients-card">
+                                    <p><?= $client['name'] ?></p>
+                                    <a class="btn-join" href="/counselor/client-profile?id=<?= $client["id"] ?>">view profile</a>
+                                </div>
+                            <?php endforeach; ?>
+                                
+                        <?php else:?>
+                            <div class="active-clients-card">
+                                <p>No Active Clients </p>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

@@ -78,7 +78,7 @@ if ($tab === 'people') {
                             <?php require __DIR__ . '/../common/user.community-post-item.php'; ?>
                         <?php endforeach; ?>
                     <?php endif; ?>
-                </div>
+                </div> 
 
                 <?php else: ?>
                 <!-- Find People Tab -->

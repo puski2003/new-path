@@ -6,6 +6,14 @@ $tasks         = $data['tasks'];
 $tasksByPhase  = $data['tasksByPhase'];
 $currentPhase  = $data['currentPhase'];
 $isSelfManaged = $data['isSelfManaged'];
+
+$planOrigin = !empty($plan['counselorId']) ? 'counselor' : (!empty($plan['sourcePlanId']) ? 'system' : 'self');
+$originMap  = [
+    'counselor' => ['icon' => 'user-check', 'label' => 'Counselor Plan', 'class' => 'counselor'],
+    'system'    => ['icon' => 'shield',     'label' => 'System Plan',    'class' => 'system'],
+    'self'      => ['icon' => 'pencil',     'label' => 'Self-managed',   'class' => 'self'],
+];
+$ob = $originMap[$planOrigin];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +32,13 @@ $isSelfManaged = $data['isSelfManaged'];
                     <i data-lucide="arrow-left" stroke-width="2" class="back-icon"></i>
                 </a>
                 <div>
-                    <h2><?= htmlspecialchars($plan['title']) ?></h2>
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                        <h2><?= htmlspecialchars($plan['title']) ?></h2>
+                        <span class="plan-origin-badge <?= $ob['class'] ?>">
+                            <i data-lucide="<?= $ob['icon'] ?>" stroke-width="2"></i>
+                            <?= htmlspecialchars($ob['label']) ?>
+                        </span>
+                    </div>
                     <p style="font-size:var(--font-size-sm);color:var(--color-text-secondary);margin-top:2px;">
                         Plan details, goals and tasks &nbsp;·&nbsp;
                         <span style="color:var(--color-primary);font-weight:600;"><?= (int)$plan['progressPercentage'] ?>% complete</span>

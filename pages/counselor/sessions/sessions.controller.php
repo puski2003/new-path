@@ -5,6 +5,54 @@ const FOLLOWUP_WINDOW_DAYS  = 7;
 $counselorId     = (int) ($user['counselorId'] ?? 0);
 $counselorUserId = (int) ($user['id'] ?? 0);
 
+if (isset($_POST['ajax']) && $_POST['ajax'] === 'send_report') {
+    header('Content-Type: application/json');
+    $result=CounselorSessionsModel::createReport($_POST);
+    echo json_encode([
+        'success' => true,
+        'message' => 'Report submitted successfully'
+    ]);
+    exit;
+}
+
+
+$sessions = CounselorSessionsModel::getAll($counselorId);
+
+date_default_timezone_set('Asia/Colombo'); 
+$today         = date('Y-m-d');
+$tabToday      = [];
+$tabUpcoming   = [];
+$tabCompleted  = [];
+$tabCancelled  = [];
+
+foreach ($sessions as $s) {
+    // error_log(sprintf(
+    //     "Session %d | datetime: %s | parsed: %s | today: %s | status: %s",
+    //     $s['sessionId'],
+    //     $s['sessionDatetime'],
+    //     date('Y-m-d H:i', strtotime($s['sessionDatetime'])),
+    //     $today,
+    //     $s['status']
+    // ));
+    $dt     = !empty($s['sessionDatetime']) ? strtotime((string) $s['sessionDatetime']) : false;
+    $status = $s['status'] ?? '';
+
+    if (!$dt) continue;
+
+    $sessionDate = date('Y-m-d', $dt);
+
+    if (in_array($status, ['cancelled', 'no_show'], true)) {
+        $tabCancelled[] = $s;
+    } elseif ($sessionDate === $today && in_array($status, ['scheduled', 'confirmed', 'in_progress'], true)) {
+        $tabToday[] = $s;   
+    } elseif ($status === 'completed' || $sessionDate < $today) {
+        $tabCompleted[] = $s;
+    } elseif ($sessionDate > $today && in_array($status, ['scheduled', 'confirmed'], true)) {
+        $tabUpcoming[] = $s;
+    } else {
+        $tabCompleted[] = $s;
+    }
+}
 /* ── AJAX handlers (follow-up popup) ────────────────────────── */
 if ($ajaxAction = Request::get('ajax')) {
     header('Content-Type: application/json');
@@ -251,36 +299,7 @@ if ($ajaxAction = Request::get('ajax')) {
     exit;
 }
 
-/* ── Page data ───────────────────────────────────────────────── */
-$sessions = CounselorSessionsModel::getAll($counselorId);
 
-// Build tab lists
-$today         = date('Y-m-d');
-$tabToday      = [];
-$tabUpcoming   = [];
-$tabCompleted  = [];
-$tabCancelled  = [];
-
-foreach ($sessions as $s) {
-    $dt     = !empty($s['sessionDatetime']) ? strtotime((string) $s['sessionDatetime']) : false;
-    $status = $s['status'] ?? '';
-
-    if (!$dt) continue;
-
-    $sessionDate = date('Y-m-d', $dt);
-
-    if (in_array($status, ['cancelled', 'no_show'], true)) {
-        $tabCancelled[] = $s;
-    } elseif ($status === 'completed') {
-        $tabCompleted[] = $s;
-    } elseif ($sessionDate === $today && in_array($status, ['scheduled', 'confirmed', 'in_progress'], true)) {
-        $tabToday[] = $s;
-    } elseif ($sessionDate > $today && in_array($status, ['scheduled', 'confirmed'], true)) {
-        $tabUpcoming[] = $s;
-    } else {
-        $tabCompleted[] = $s;
-    }
-}
 
 // Completed sessions with thread data for the follow-up popup
 $followupSessions = [];

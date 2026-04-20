@@ -18,7 +18,7 @@ class Database
                 env('DB_USER', 'root'),
                 env('DB_PASS', 'Pasidu2003@'),
                 env('DB_NAME', 'new_path_2'),
-                (int) env('DB_PORT', '3308'),
+                (int) env('DB_PORT', '3306'),
                 null,
                 MYSQLI_CLIENT_SSL
             );

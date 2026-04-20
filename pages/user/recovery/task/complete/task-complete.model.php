@@ -145,7 +145,18 @@ class TaskCompleteModel
         $completed = (int)($row['completed_count'] ?? 0);
         $progress = $total > 0 ? (int)round(($completed / $total) * 100) : 0;
 
-        $newStatus = ($total > 0 && $completed >= $total) ? 'completed' : 'active';
+        $planRs = Database::search(
+            "SELECT status FROM recovery_plans WHERE plan_id = $planId LIMIT 1"
+        );
+        $currentStatus = $planRs ? ($planRs->fetch_assoc()['status'] ?? 'active') : 'active';
+
+        if ($total > 0 && $completed >= $total) {
+            $newStatus = 'completed';
+        } elseif ($currentStatus === 'paused') {
+            $newStatus = 'paused';
+        } else {
+            $newStatus = 'active';
+        }
 
         Database::iud(
             "UPDATE recovery_plans

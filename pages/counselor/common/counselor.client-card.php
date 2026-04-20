@@ -9,7 +9,7 @@ $clientId   = (int) ($client['id'] ?? 0);
 $hasPlan    = !empty($client['latestPlanId']);
 $planId     = (int) ($client['latestPlanId'] ?? 0);
 ?>
-<div class="cc-client-row">
+<div class="cc-client-row" data-name="<?= strtolower($name) ?>" data-sessions="<?= $sessions ?>">
 
     <div class="cc-client-avatar">
         <img src="<?= $avatarUrl ?>" alt="<?= $name ?>" />

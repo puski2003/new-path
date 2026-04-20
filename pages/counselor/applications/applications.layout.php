@@ -3,6 +3,7 @@
 <?php
 $pageTitle = 'Apply as a Counselor — New Path';
 $authCss   = 'counselor-application.css';
+
 require_once __DIR__ . '/../../auth/common/auth.head.php';
 
 $specialties = [
@@ -18,9 +19,7 @@ $specialties = [
 ?>
 <body class="theme-counselor" style="height:auto;min-height:100vh;background:var(--color-bg-light-green);">
 
-<!-- ============================================================
-     TOP BAR
-     ============================================================ -->
+
 <header class="ca-topbar">
     <a href="/" class="ca-topbar__logo">
         <img src="/assets/img/logo.svg" alt="New Path">
@@ -34,9 +33,7 @@ $specialties = [
     </a>
 </header>
 
-<!-- ============================================================
-     HERO
-     ============================================================ -->
+
 <div class="ca-hero">
     <div class="ca-hero__badge">
         <span class="ca-hero__badge-dot"></span>
@@ -46,9 +43,7 @@ $specialties = [
     <p>Join our team of certified professionals and help people find their path to recovery.</p>
 </div>
 
-<!-- ============================================================
-     STEP INDICATORS
-     ============================================================ -->
+
 <div class="ca-steps-wrap">
     <div class="ca-steps">
         <?php
@@ -63,11 +58,8 @@ $specialties = [
     </div>
 </div>
 
-<!-- ============================================================
-     FORM
-     ============================================================ -->
-<main class="ca-body">
 
+<main class="ca-body">
     <?php if (!empty($errorMessage)): ?>
         <div class="ca-alert">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -80,10 +72,6 @@ $specialties = [
     <?php endif; ?>
 
     <form method="POST" enctype="multipart/form-data" novalidate>
-
-        <!-- ------------------------------------------------
-             SECTION 1 — Personal Information
-             ------------------------------------------------ -->
         <div class="ca-section">
             <div class="ca-section__header">
                 <div class="ca-section__icon">
@@ -129,9 +117,7 @@ $specialties = [
             </div>
         </div>
 
-        <!-- ------------------------------------------------
-             SECTION 2 — Professional Information
-             ------------------------------------------------ -->
+
         <div class="ca-section">
             <div class="ca-section__header">
                 <div class="ca-section__icon">
@@ -199,9 +185,7 @@ $specialties = [
             </div>
         </div>
 
-        <!-- ------------------------------------------------
-             SECTION 3 — Education & Credentials
-             ------------------------------------------------ -->
+
         <div class="ca-section">
             <div class="ca-section__header">
                 <div class="ca-section__icon">
@@ -255,9 +239,7 @@ $specialties = [
             </div>
         </div>
 
-        <!-- ------------------------------------------------
-             SECTION 4 — Availability
-             ------------------------------------------------ -->
+
         <div class="ca-section">
             <div class="ca-section__header">
                 <div class="ca-section__icon">
@@ -391,9 +373,7 @@ $specialties = [
             </script>
         </div>
 
-        <!-- ------------------------------------------------
-             SUBMIT
-             ------------------------------------------------ -->
+
         <div class="ca-submit-area">
             <p class="ca-submit-note">
                 <strong>Ready to submit?</strong><br>
@@ -547,6 +527,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-
+<script src='/assets/js/counselor/applications/applications.js'></script>
 </body>
 </html>

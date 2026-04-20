@@ -151,6 +151,16 @@
 
 .rp-empty p { font-size: var(--font-size-sm); margin-bottom: var(--spacing-md); }
 
+
+.rp-filter form{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.rp-filter form select{
+    height: 40px;
+}
 /* ── Responsive ── */
 @media (max-width: 768px) {
     .rp-plan-row {

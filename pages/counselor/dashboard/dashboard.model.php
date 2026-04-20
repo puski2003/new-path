@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/../common/counselor.data.php';
 class CounselorDashboardModel
 {
     public static function getCounselorById(int $counselorId): ?array
@@ -49,13 +49,13 @@ class CounselorDashboardModel
         $safeCounselorId = max(0, $counselorId);
         $rs = Database::search(
             "SELECT s.session_id, s.user_id, s.session_datetime, s.session_type, s.status, s.meeting_link,
-                    COALESCE(u.display_name, CONCAT(u.first_name, ' ', u.last_name), u.username, 'Client') AS user_name
-             FROM sessions s
-             JOIN users u ON u.user_id = s.user_id
-             WHERE s.counselor_id = $safeCounselorId
+                COALESCE(u.display_name, CONCAT(u.first_name, ' ', u.last_name), u.username, 'Client') AS user_name
+            FROM sessions s
+            JOIN users u ON u.user_id = s.user_id
+            WHERE s.counselor_id = $safeCounselorId 
                AND s.session_datetime > NOW()
                AND s.status IN ('scheduled', 'confirmed')
-             ORDER BY s.session_datetime ASC"
+            ORDER BY s.session_datetime ASC"
         );
 
         $sessions = [];
@@ -120,6 +120,10 @@ class CounselorDashboardModel
         );
         $row = $rs ? $rs->fetch_assoc() : null;
         return (float)($row['total'] ?? 0);
+    }
+    public static function getActiveClients(int $counselorId){
+        
+        return CounselorData::getClientsByCounselor($counselorId);
     }
 
     public static function getActiveClientsCount(int $counselorId): int

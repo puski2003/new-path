@@ -5,7 +5,7 @@ class ViewModel
     public function getPlanByIdForUser(int $planId, int $userId): ?array
     {
         $rs = Database::search(
-            "SELECT plan_id, title, description, plan_type, status, assigned_status, progress_percentage, counselor_id
+            "SELECT plan_id, title, description, plan_type, status, assigned_status, progress_percentage, counselor_id, source_plan_id
              FROM recovery_plans
              WHERE plan_id = $planId
                AND user_id = $userId
@@ -26,6 +26,7 @@ class ViewModel
             'assignedStatus'     => $row['assigned_status']     ?? null,
             'progressPercentage' => (int)($row['progress_percentage'] ?? 0),
             'counselorId'        => isset($row['counselor_id']) ? (int)$row['counselor_id'] : null,
+            'sourcePlanId'       => isset($row['source_plan_id']) ? (int)$row['source_plan_id'] : null,
         ];
     }
 

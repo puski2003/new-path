@@ -134,7 +134,7 @@ class CounselorFinancesModel
                 'currency'          => $row['currency'] ?? 'LKR',
                 'periodStart'       => $periodStart,
                 'periodEnd'         => $periodEnd,
-                'periodLabel'       => "$periodStart – $periodEnd",
+                'periodLabel'       => "$periodStart - $periodEnd",
                 'sessionsCount'     => (int) ($row['sessions_count'] ?? 0),
                 'status'            => $row['status'] ?? 'pending',
                 'paidAt'            => !empty($row['paid_at']) ? date('M j, Y', strtotime($row['paid_at'])) : '-',
