@@ -54,31 +54,36 @@ $pageScripts = [
 
             <div class="main-content-body">
 
-                <!-- Flash messages -->
-                <?php if ($flashStarted): ?>
-                <div class="success-message" style="margin:var(--spacing-md) var(--spacing-2xl) 0;display:flex;align-items:center;gap:8px;">
-                    <i data-lucide="heart" style="width:16px;height:16px;flex-shrink:0;"></i>
-                    <?= htmlspecialchars($flashStarted) ?>
+                <!-- Flash message -->
+                <?php if ($flashMsg): ?>
+                <div class="<?= $flashType === 'error' ? 'error-message' : 'success-message' ?>" style="margin:var(--spacing-md) var(--spacing-2xl) 0;">
+                    <?= htmlspecialchars($flashMsg) ?>
                 </div>
                 <?php endif; ?>
-                <?php if ($flashCheckin): ?>
-                <div class="success-message" style="margin:var(--spacing-md) var(--spacing-2xl) 0;"><?= htmlspecialchars($flashCheckin) ?></div>
-                <?php endif; ?>
-                <?php if ($flashUrge): ?>
-                <div class="success-message" style="margin:var(--spacing-md) var(--spacing-2xl) 0;"><?= htmlspecialchars($flashUrge) ?></div>
-                <?php endif; ?>
-                <?php if (!empty($_GET['followupRequested'])): ?>
-                <div class="success-message" style="margin:var(--spacing-md) var(--spacing-2xl) 0;display:flex;align-items:center;gap:8px;">
-                    <i data-lucide="send" style="width:16px;height:16px;flex-shrink:0;"></i>
-                    Follow-up request sent! Your counselor will create a new plan for you soon.
-                </div>
-                <?php endif; ?>
-                <?php if ($flashEcSaved): ?>
-                <div class="success-message" style="margin:var(--spacing-md) var(--spacing-2xl) 0;"><?= htmlspecialchars($flashEcSaved) ?></div>
-                <?php endif; ?>
-                <?php if (!empty($_GET['taskBlocked'])): ?>
-                <div class="error-message" style="margin:var(--spacing-md) var(--spacing-2xl) 0;">
-                    Complete all tasks in the current phase before moving to the next.
+
+                <!-- Sobriety start prompt -->
+                <?php if (!$trackingStarted): ?>
+                <div style="margin:var(--spacing-lg) var(--spacing-2xl) 0;">
+                    <div style="background:linear-gradient(135deg,var(--color-primary),var(--color-primary-dark,#2a7a5e));border-radius:var(--radius-xl);padding:var(--spacing-xl) var(--spacing-2xl);display:flex;align-items:center;gap:var(--spacing-xl);flex-wrap:wrap;">
+                        <div style="flex-shrink:0;width:52px;height:52px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                            <i data-lucide="heart" style="width:26px;height:26px;color:#fff;" stroke-width="1.5"></i>
+                        </div>
+                        <div style="flex:1;min-width:200px;">
+                            <h3 style="color:#fff;font-size:var(--font-size-lg);font-weight:700;margin-bottom:4px;">Start tracking your sobriety</h3>
+                            <p style="color:rgba(255,255,255,0.85);font-size:var(--font-size-sm);margin:0;">Choose the date you began your journey. This is your Day 1.</p>
+                        </div>
+                        <form method="post" action="/user/recovery/start-sobriety" style="display:flex;align-items:center;gap:var(--spacing-sm);flex-wrap:wrap;flex-shrink:0;">
+                            <input type="date"
+                                   name="sobrietyDate"
+                                   max="<?= date('Y-m-d') ?>"
+                                   value="<?= date('Y-m-d') ?>"
+                                   style="padding:10px 14px;border-radius:var(--radius-pill);border:none;font-size:var(--font-size-sm);font-family:inherit;background:rgba(255,255,255,0.95);color:var(--color-text-primary);font-weight:500;cursor:pointer;" />
+                            <button type="submit"
+                                    style="padding:10px 24px;background:#fff;color:var(--color-primary-dark,#2a7a5e);border:none;border-radius:var(--radius-pill);font-size:var(--font-size-sm);font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">
+                                Set My Start Date
+                            </button>
+                        </form>
+                    </div>
                 </div>
                 <?php endif; ?>
 

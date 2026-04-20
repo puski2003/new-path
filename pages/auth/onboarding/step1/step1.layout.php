@@ -96,6 +96,7 @@ require_once __DIR__ . '/../../common/auth.head.php';
                                         </svg>
                                     </button>
                                 </div>
+                                <div id="passwordMatchError" style="color:#f44336;font-size:13px;margin-top:4px;display:none;"></div>
                             </div>
                         </div>
                     </div>
@@ -127,19 +128,44 @@ require_once __DIR__ . '/../../common/auth.head.php';
                 });
             });
 
-            document.getElementById('profileForm').addEventListener('submit', function(e) {
-                const password = document.getElementById('password').value;
-                const rePassword = document.getElementById('rePassword').value;
+            const pwInput   = document.getElementById('password');
+            const rePwInput = document.getElementById('rePassword');
+            const matchErr  = document.getElementById('passwordMatchError');
 
-                if (password !== rePassword) {
-                    e.preventDefault();
-                    alert('Passwords do not match!');
-                    return false;
-                }
+            function showMatchError(msg) {
+                if (matchErr) { matchErr.textContent = msg; matchErr.style.display = 'block'; }
+                if (rePwInput) rePwInput.style.borderColor = '#f44336';
+            }
+            function clearMatchError() {
+                if (matchErr) { matchErr.textContent = ''; matchErr.style.display = 'none'; }
+                if (rePwInput) rePwInput.style.borderColor = '';
+            }
+
+            if (rePwInput) {
+                rePwInput.addEventListener('input', function () {
+                    if (pwInput.value && rePwInput.value && pwInput.value !== rePwInput.value) {
+                        showMatchError('Passwords do not match.');
+                    } else {
+                        clearMatchError();
+                    }
+                });
+            }
+
+            document.getElementById('profileForm').addEventListener('submit', function(e) {
+                const password = pwInput.value;
+                const rePassword = rePwInput.value;
+                clearMatchError();
 
                 if (password.length < 6) {
                     e.preventDefault();
-                    alert('Password must be at least 6 characters long!');
+                    pwInput.style.borderColor = '#f44336';
+                    pwInput.focus();
+                    return false;
+                }
+
+                if (password !== rePassword) {
+                    e.preventDefault();
+                    showMatchError('Passwords do not match.');
                     return false;
                 }
 

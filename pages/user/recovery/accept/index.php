@@ -1,19 +1,19 @@
 <?php
 require_once __DIR__ . '/../../common/user.head.php';
-require_once __DIR__ . '/../recovery.model.php';
+require_once __DIR__ . '/accept.model.php';
 
-if (!Request::isPost()) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     Response::redirect('/user/recovery');
+    exit;
 }
 
-$planId = (int)(Request::post('planId') ?? 0);
-$result = false;
+$planId = (int)($_POST['planId'] ?? 0);
 if ($planId > 0) {
-    $result = RecoveryModel::acceptAssignedPlan($planId, (int)$user['id']);
+    $result = AcceptModel::accept($planId, (int)$user['id']);
 }
 
-if ($result) {
-    Response::redirect('/user/recovery?accepted=1');
+if ($result ?? false) {
+    Response::redirect('/user/recovery?status=success');
 } else {
-    Response::redirect('/user/recovery/manage?error=already_active');
+    Response::redirect('/user/recovery/manage?status=error');
 }

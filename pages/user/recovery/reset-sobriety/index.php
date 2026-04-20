@@ -1,10 +1,10 @@
 <?php
 require_once __DIR__ . '/../../common/user.head.php';
-require_once __DIR__ . '/../recovery.model.php';
+require_once __DIR__ . '/reset-sobriety.model.php';
 
-if (Request::isPost()) {
-    $reason = Request::post('reason') ?? '';
-    RecoveryModel::resetSobrietyCounter((int)$user['id'], $reason);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $reason = $_POST['reason'] ?? '';
+    ResetSobrietyModel::reset((int)$user['id'], $reason);
 }
 
-Response::redirect('/user/recovery?reset=1');
+Response::redirect('/user/recovery?status=success');

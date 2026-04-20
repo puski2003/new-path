@@ -59,6 +59,7 @@ require_once __DIR__ . '/../../common/admin.html.head.php';
                     <div class="form-group">
                         <label class="form-label" for="meeting_link">Meeting Link *</label>
                         <input class="form-input" type="url" id="meeting_link" name="meeting_link" value="<?= htmlspecialchars($_POST['meeting_link'] ?? '') ?>" placeholder="https://meet.google.com/..." />
+                        <div class="field-error" id="meetingLinkError" style="color:#f44336;font-size:13px;margin-top:4px;display:none;"></div>
                     </div>
                 </div>
 
@@ -66,6 +67,7 @@ require_once __DIR__ . '/../../common/admin.html.head.php';
                     <div class="form-group">
                         <label class="form-label" for="meeting_location">Meeting Location *</label>
                         <input class="form-input" type="text" id="meeting_location" name="meeting_location" value="<?= htmlspecialchars($_POST['meeting_location'] ?? '') ?>" placeholder="e.g., Community Center, Room 101" />
+                        <div class="field-error" id="meetingLocationError" style="color:#f44336;font-size:13px;margin-top:4px;display:none;"></div>
                     </div>
                 </div>
 
@@ -113,10 +115,70 @@ function toggleRecurrenceFields() {
     document.getElementById('recurrence_fields').style.display = isRecurring ? 'block' : 'none';
 }
 
-// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     toggleMeetingFields();
     toggleRecurrenceFields();
+
+    document.querySelector('.admin-form').addEventListener('submit', function(e) {
+        var valid = true;
+        var sessionType = document.getElementById('session_type').value;
+        var linkErr = document.getElementById('meetingLinkError');
+        var locErr  = document.getElementById('meetingLocationError');
+
+        linkErr.style.display = 'none';
+        locErr.style.display  = 'none';
+
+        if (sessionType === 'video') {
+            var link = document.getElementById('meeting_link');
+            if (!link.value.trim()) {
+                linkErr.textContent = 'Meeting link is required for video sessions.';
+                linkErr.style.display = 'block';
+                link.style.borderColor = '#f44336';
+                valid = false;
+            } else if (!/^https?:\/\/.+/.test(link.value.trim())) {
+                linkErr.textContent = 'Please enter a valid URL starting with http:// or https://';
+                linkErr.style.display = 'block';
+                link.style.borderColor = '#f44336';
+                valid = false;
+            } else {
+                link.style.borderColor = '';
+            }
+        }
+
+        if (sessionType === 'in_person') {
+            var loc = document.getElementById('meeting_location');
+            if (!loc.value.trim()) {
+                locErr.textContent = 'Meeting location is required for in-person sessions.';
+                locErr.style.display = 'block';
+                loc.style.borderColor = '#f44336';
+                valid = false;
+            } else {
+                loc.style.borderColor = '';
+            }
+        }
+
+        var datetime = document.getElementById('session_datetime');
+        if (datetime && datetime.value) {
+            var selected = new Date(datetime.value);
+            if (selected <= new Date()) {
+                datetime.style.borderColor = '#f44336';
+                valid = false;
+                if (!document.getElementById('datetimeError')) {
+                    var dtErr = document.createElement('div');
+                    dtErr.id = 'datetimeError';
+                    dtErr.style.cssText = 'color:#f44336;font-size:13px;margin-top:4px;';
+                    dtErr.textContent = 'Session date must be in the future.';
+                    datetime.parentNode.appendChild(dtErr);
+                }
+            } else {
+                datetime.style.borderColor = '';
+                var existing = document.getElementById('datetimeError');
+                if (existing) existing.remove();
+            }
+        }
+
+        if (!valid) e.preventDefault();
+    });
 });
 </script>
 

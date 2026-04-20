@@ -1,43 +1,3 @@
-class DashboardApi {
-  static async completeTask(taskId) {
-    const body = new URLSearchParams();
-    body.append("taskId", String(taskId));
-
-    const response = await fetch("/user/recovery/task/complete-ajax", {
-      method: "POST",
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-      body: body,
-    });
-
-    const data = await response.json().catch(function () { return null; });
-
-    if (!response.ok || !data || data.success !== true) {
-      throw new Error((data && data.message) || "Task update failed.");
-    }
-
-    return data;
-  }
-
-  static async uncompleteTask(taskId) {
-    const body = new URLSearchParams();
-    body.append("taskId", String(taskId));
-
-    const response = await fetch("/user/recovery/task/uncomplete", {
-      method: "POST",
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-      body: body,
-    });
-
-    const data = await response.json().catch(function () { return null; });
-
-    if (!response.ok || !data || data.success !== true) {
-      throw new Error((data && data.message) || "Could not undo.");
-    }
-
-    return data;
-  }
-}
-
 class DashboardPage {
   constructor() {
     this.tasksContainer = document.querySelector(".daily-tasks");
@@ -72,56 +32,77 @@ class DashboardPage {
 
       taskItem.dataset.loading = "1";
 
-      // Save form HTML so it can be restored on undo
       const savedFormHtml = form.outerHTML;
-
       const checkbox = taskItem.querySelector(".task-checkbox");
       const taskText = taskItem.querySelector(".task-text");
 
       try {
-        await DashboardApi.completeTask(taskId);
-
-        // Update UI to completed state
-        taskItem.classList.add("task-item--done");
-        if (checkbox) {
-          checkbox.classList.add("completed");
-          checkbox.innerHTML = '<i data-lucide="check" style="width:14px;height:14px;" color="white"></i>';
-        }
-        if (taskText) taskText.classList.add("completed");
-        const doneLabel = document.createElement("span");
-        doneLabel.className = "task-done-label";
-        doneLabel.textContent = "Done";
-        form.replaceWith(doneLabel);
-        if (typeof lucide !== "undefined") lucide.createIcons();
-
-        showUndoToast("Task marked complete.", 5000, async () => {
-          try {
-            await DashboardApi.uncompleteTask(taskId);
-
-            // Revert UI to pending state
-            taskItem.classList.remove("task-item--done");
-            if (checkbox) {
-              checkbox.classList.remove("completed");
-              checkbox.innerHTML = "";
-            }
-            if (taskText) taskText.classList.remove("completed");
-            const currentDoneLabel = taskItem.querySelector(".task-done-label");
-            if (currentDoneLabel) {
-              const temp = document.createElement("div");
-              temp.innerHTML = savedFormHtml;
-              currentDoneLabel.replaceWith(temp.firstChild);
-            }
-            if (typeof lucide !== "undefined") lucide.createIcons();
-          } catch (err) {
-            this.showError(err.message || "Could not undo. Please refresh.");
-          }
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+          redirect: "manual",
         });
+
+        if (response.type === "opaqueredirect" || response.ok) {
+          taskItem.classList.add("task-item--done");
+          if (checkbox) {
+            checkbox.classList.add("completed");
+            checkbox.innerHTML = '<i data-lucide="check" style="width:14px;height:14px;" color="white"></i>';
+          }
+          if (taskText) taskText.classList.add("completed");
+          const doneLabel = document.createElement("span");
+          doneLabel.className = "task-done-label";
+          doneLabel.textContent = "Done";
+          form.replaceWith(doneLabel);
+          if (typeof lucide !== "undefined") lucide.createIcons();
+
+          showUndoToast("Task marked complete.", 5000, async () => {
+            await this.uncompleteTask(taskId, taskItem, savedFormHtml);
+          });
+        } else {
+          this.showError("Failed to complete task.");
+        }
       } catch (error) {
         this.showError(error.message || "Failed to update task.");
       } finally {
         delete taskItem.dataset.loading;
       }
     });
+  }
+
+  async uncompleteTask(taskId, taskItem, savedFormHtml) {
+    const formData = new URLSearchParams();
+    formData.append("taskId", String(taskId));
+
+    try {
+      const response = await fetch("/user/recovery/task/uncomplete", {
+        method: "POST",
+        body: formData,
+        redirect: "manual",
+      });
+
+      if (response.type === "opaqueredirect" || response.ok) {
+        taskItem.classList.remove("task-item--done");
+        const checkbox = taskItem.querySelector(".task-checkbox");
+        if (checkbox) {
+          checkbox.classList.remove("completed");
+          checkbox.innerHTML = "";
+        }
+        const taskText = taskItem.querySelector(".task-text");
+        if (taskText) taskText.classList.remove("completed");
+        const currentDoneLabel = taskItem.querySelector(".task-done-label");
+        if (currentDoneLabel) {
+          const temp = document.createElement("div");
+          temp.innerHTML = savedFormHtml;
+          currentDoneLabel.replaceWith(temp.firstChild);
+        }
+        if (typeof lucide !== "undefined") lucide.createIcons();
+      } else {
+        this.showError("Could not undo. Please refresh.");
+      }
+    } catch (err) {
+      this.showError(err.message || "Could not undo. Please refresh.");
+    }
   }
 
   initTaskPagination() {
@@ -202,7 +183,7 @@ function showUndoToast(message, duration, onUndo) {
     '<span style="flex:1;font-size:14px;font-weight:500;">' + escapeHtml(message) + "</span>" +
     '<button type="button" class="undo-task-toast__btn">Undo</button>' +
     '<div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.25);border-radius:0 0 10px 10px;overflow:hidden;">' +
-    '  <div class="undo-task-toast__bar" style="height:100%;width:100%;background:rgba(255,255,255,0.7);transition:width ' + duration + "ms linear;\"></div>" +
+    '  <div class="undo-task-toast__bar" style="height:100%;width:100%;background:rgba(255,255,255,0.7);transition:width ' + duration + "ms linear;"></div>" +
     "</div>";
 
   toast.style.cssText = [

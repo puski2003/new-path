@@ -316,7 +316,7 @@ require_once __DIR__ . '/../common/user.html.head.php';
                                 ?>
                                 <div class="goal-widget-item <?= $isAchieved ? 'goal-widget-item--done' : '' ?>">
                                     <div class="goal-widget-top">
-                                        <span class="goal-widget-title"><?= htmlspecialchars($g['title']) ?></span>
+                                        <span class="goal-widget-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px;display:inline-block;"><?= htmlspecialchars($g['title']) ?></span>
                                         <span class="goal-widget-days"><?= $g['currentProgress'] ?>/<?= $g['targetDays'] ?>d</span>
                                     </div>
                                     <div class="goal-widget-bar">

@@ -1,31 +1,15 @@
 <?php
 require_once __DIR__ . '/../../../common/user.head.php';
-require_once __DIR__ . '/../../recovery.model.php';
+require_once __DIR__ . '/task-uncomplete.model.php';
 
-header('Content-Type: application/json');
-
-if (!Request::isPost()) {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Method not allowed.']);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    Response::redirect('/user/recovery');
     exit;
 }
 
-$taskId = (int)(Request::post('taskId') ?? 0);
-if ($taskId <= 0) {
-    http_response_code(422);
-    echo json_encode(['success' => false, 'message' => 'Invalid task.']);
-    exit;
+$taskId = (int)($_POST['taskId'] ?? 0);
+if ($taskId > 0) {
+    TaskUncompleteModel::uncomplete($taskId, (int)$user['id']);
 }
 
-$reverted = RecoveryModel::uncompleteTask($taskId, (int)$user['id']);
-if (!$reverted) {
-    http_response_code(422);
-    echo json_encode(['success' => false, 'message' => 'Task could not be reverted.']);
-    exit;
-}
-
-echo json_encode([
-    'success' => true,
-    'message' => 'Task reverted to pending.',
-    'taskId'  => $taskId,
-]);
+Response::redirect('/user/recovery?status=success');

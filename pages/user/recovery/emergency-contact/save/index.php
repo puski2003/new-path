@@ -1,31 +1,19 @@
 <?php
 require_once __DIR__ . '/../../../common/user.head.php';
+require_once __DIR__ . '/emergency-contact.model.php';
 
-if (!Request::isPost()) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     Response::redirect('/user/recovery');
+    exit;
 }
 
-$userId  = (int)$user['id'];
-$ecName  = addslashes(trim(Request::post('ecName')  ?? ''));
-$ecPhone = addslashes(trim(Request::post('ecPhone') ?? ''));
+$userId = (int)$user['id'];
+$name = trim($_POST['ecName'] ?? '');
+$phone = trim($_POST['ecPhone'] ?? '');
 
-if ($ecName === '' || $ecPhone === '') {
-    Response::redirect('/user/recovery?ecError=1');
+if ($name === '' || $phone === '') {
+    Response::redirect('/user/recovery?status=error&msg=empty');
 }
 
-// Upsert into user_profiles
-$exists = Database::search("SELECT profile_id FROM user_profiles WHERE user_id = $userId LIMIT 1");
-if ($exists && $exists->num_rows > 0) {
-    Database::iud(
-        "UPDATE user_profiles
-         SET emergency_contact_name = '$ecName', emergency_contact_phone = '$ecPhone', updated_at = NOW()
-         WHERE user_id = $userId"
-    );
-} else {
-    Database::iud(
-        "INSERT INTO user_profiles (user_id, emergency_contact_name, emergency_contact_phone, created_at, updated_at)
-         VALUES ($userId, '$ecName', '$ecPhone', NOW(), NOW())"
-    );
-}
-
-Response::redirect('/user/recovery?ecSaved=1');
+EmergencyContactModel::saveEmergencyContact($userId, $name, $phone);
+Response::redirect('/user/recovery?status=success');

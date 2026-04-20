@@ -43,11 +43,19 @@ $nextSessionTime = $nextSession['time'];
 $counselorName = $nextSession['counselorName'];
 $counselorNotes = "Great progress this week! Let's focus on mindfulness techniques next session.";
 
-// Flash messages from sub-pages
-$flashCheckin  = isset($_GET['checkinDone']) ? 'Daily check-in saved!' : null;
-$flashUrge     = isset($_GET['urgeDone'])    ? 'Urge logged successfully.' : null;
-$flashEcSaved  = isset($_GET['ecSaved'])     ? 'Emergency contact saved.' : null;
-$flashStarted  = isset($_GET['started'])     ? 'Sobriety tracking started! Day 1 begins today.' : null;
+// Flash messages
+$flashMsg  = null;
+$flashType = 'success';
+$msgMap = [
+    'sobriety_started' => 'Sobriety tracking started! Day 1 begins today.',
+    'followup_sent'    => 'Follow-up request sent! Your counselor will create a new plan for you soon.',
+    'task_blocked'     => 'Complete all tasks in the current phase before moving to the next.',
+];
+if (isset($_GET['status'])) {
+    $flashType = $_GET['status'] === 'error' ? 'error' : 'success';
+    $msgKey    = $_GET['msg'] ?? '';
+    $flashMsg  = $msgMap[$msgKey] ?? ($flashType === 'success' ? 'Action completed successfully.' : 'Something went wrong. Please try again.');
+}
 
 // Check if already checked in today
 $todayCheckRs = Database::search(
