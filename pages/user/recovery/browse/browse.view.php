@@ -5,10 +5,10 @@ $hasActivePlan = $data['hasActivePlan'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php require_once __DIR__ . '/../../../common/user.html.head.php'; ?>
+<?php require_once __DIR__ . '/../../common/user.html.head.php'; ?>
 <body>
 <main class="main-container">
-    <?php $activePage = 'recovery'; require_once __DIR__ . '/../../../common/user.sidebar.php'; ?>
+    <?php $activePage = 'recovery'; require_once __DIR__ . '/../../common/user.sidebar.php'; ?>
     <section class="main-content">
         <img src="/assets/img/main-content-head.svg" alt="" class="main-header-bg-image" />
 
