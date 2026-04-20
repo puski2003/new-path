@@ -14,6 +14,7 @@
 
 require_once __DIR__ . '/../../../common/user.head.php';
 require_once __DIR__ . '/../extend.model.php';
+require_once __DIR__ . '/return.model.php';
 require_once __DIR__ . '/../../../../../core/Mailer.php';
 
 $extensionId    = (int)(Request::get('extension_id')     ?? 0);
@@ -33,18 +34,15 @@ if ($extensionId <= 0) {
 }
 
 // Prevent duplicate processing: if already paid, send to success page
-$checkRs = Database::search(
-    "SELECT status FROM session_extension_requests WHERE extension_id = $extensionId LIMIT 1"
-);
-$checkRow = $checkRs ? $checkRs->fetch_assoc() : null;
-if (!$checkRow) {
+$status = ExtendReturnModel::getStatus($extensionId);
+if ($status === null) {
     extRedirectError('Extension request not found.');
 }
-if ($checkRow['status'] === 'paid') {
+if ($status === 'paid') {
     Response::redirect('/user/sessions/extend/success?extension_id=' . $extensionId);
     exit;
 }
-if ($checkRow['status'] !== 'accepted') {
+if ($status !== 'accepted') {
     extRedirectError('This extension request is no longer valid.');
 }
 
@@ -72,36 +70,14 @@ $totalMinutes     = $ext['originalDuration'] + $ext['extendedMinutes'];
 $newEndTs         = strtotime((string)$ext['sessionDatetime']) + ($totalMinutes * 60);
 $newEndLabel      = date('g:i A', $newEndTs);
 
-// ── In-app notification: user ──
-Database::setUpConnection();
-$uTitle = Database::$connection->real_escape_string('Session Extended!');
-$uMsg   = Database::$connection->real_escape_string(
-    'Your session has been extended by ' . $ext['durationMinutes'] . ' minutes. New end time: ' . $newEndLabel . '.'
-);
-$uLink  = Database::$connection->real_escape_string('/user/sessions?id=' . $ext['sessionId']);
-Database::iud(
-    "INSERT INTO notifications (user_id, type, title, message, link)
-     VALUES ({$ext['userId']}, 'extension_paid', '$uTitle', '$uMsg', '$uLink')"
-);
-
-// ── In-app notification: counselor ──
-if ($ext['counselorUserId'] > 0) {
-    $cTitle = Database::$connection->real_escape_string('Extension Payment Confirmed');
-    $cMsg   = Database::$connection->real_escape_string(
-        $ext['userName'] . ' has paid for the ' . $ext['durationMinutes'] . '-minute extension. New end time: ' . $newEndLabel . '.'
-    );
-    $cLink  = Database::$connection->real_escape_string('/counselor/sessions/workspace?session_id=' . $ext['sessionId']);
-    Database::iud(
-        "INSERT INTO notifications (user_id, type, title, message, link)
-         VALUES ({$ext['counselorUserId']}, 'extension_paid', '$cTitle', '$cMsg', '$cLink')"
-    );
-}
+// In-app notifications
+ExtendReturnModel::insertNotifications($ext, $newEndLabel);
 
 $meetLinkHtml = !empty($ext['meetingLink'])
     ? "<p style='margin:8px 0;'><strong>Meeting link:</strong> <a href='" . htmlspecialchars($ext['meetingLink']) . "' style='color:#4CAF50;'>" . htmlspecialchars($ext['meetingLink']) . "</a></p>"
     : '';
 
-// ── Email: user ──
+// Email: user
 if (!empty($ext['userEmail'])) {
     $userHtml = "
         <div style='font-family:Montserrat,sans-serif;max-width:520px;margin:auto;padding:32px;'>
@@ -123,7 +99,7 @@ if (!empty($ext['userEmail'])) {
     Mailer::send($ext['userEmail'], 'NewPath — Session Extended Successfully', $userHtml, $ext['userName']);
 }
 
-// ── Email: counselor ──
+// Email: counselor
 if (!empty($ext['counselorEmail'])) {
     $counselorHtml = "
         <div style='font-family:Montserrat,sans-serif;max-width:520px;margin:auto;padding:32px;'>

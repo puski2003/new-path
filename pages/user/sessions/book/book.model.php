@@ -188,6 +188,56 @@ class BookingModel
         return (string)($row['email'] ?? '');
     }
 
+    /**
+     * Fetch display name, email, and phone for a user (used on checkout page).
+     * Returns array with keys: display_name, email, phone.
+     */
+    public static function getUserDetails(int $userId): array
+    {
+        $rs = Database::search(
+            "SELECT email, phone_number,
+                    COALESCE(display_name, CONCAT(first_name,' ',last_name), username, 'User') AS display_name
+             FROM users WHERE user_id = $userId LIMIT 1"
+        );
+        $row = $rs ? $rs->fetch_assoc() : null;
+        return [
+            'display_name' => (string)($row['display_name'] ?? 'User'),
+            'email'        => (string)($row['email'] ?? ''),
+            'phone'        => (string)($row['phone_number'] ?? ''),
+        ];
+    }
+
+    // ------------------------------------------------------------------
+    // Success page data
+    // ------------------------------------------------------------------
+
+    /**
+     * Fetch the extra data needed for the booking-success display page.
+     * Returns ['durationMinutes' => int, 'transaction' => array|null].
+     */
+    public static function getBookingSuccess(int $sessionId): array
+    {
+        $durRs = Database::search(
+            "SELECT duration_minutes FROM sessions WHERE session_id = $sessionId LIMIT 1"
+        );
+        $durRow          = $durRs ? $durRs->fetch_assoc() : null;
+        $durationMinutes = (int)($durRow['duration_minutes'] ?? 60);
+
+        $txRs = Database::search(
+            "SELECT transaction_uuid, payhere_payment_id, amount, processed_at
+             FROM transactions
+             WHERE session_id = $sessionId
+             ORDER BY created_at DESC
+             LIMIT 1"
+        );
+        $transaction = $txRs ? $txRs->fetch_assoc() : null;
+
+        return [
+            'durationMinutes' => $durationMinutes,
+            'transaction'     => $transaction,
+        ];
+    }
+
     // ------------------------------------------------------------------
     // Session + Transaction creation (called from return handler)
     // ------------------------------------------------------------------

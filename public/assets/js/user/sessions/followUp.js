@@ -8,10 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
     emptyMessage: "No messages yet. Start the conversation!",
     composePlaceholder: "Type a message...",
     loadMessagesUrl: function (sessionId) {
-      return "/user/sessions?ajax=get_messages&session_id=" + sessionId;
+      return "/user/sessions/follow-up?ajax=get_messages&session_id=" + sessionId;
     },
     sendMessageUrl: function () {
-      return "/user/sessions?ajax=send_message";
+      return "/user/sessions/follow-up?ajax=send_message";
     },
   });
 });

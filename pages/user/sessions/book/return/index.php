@@ -14,6 +14,7 @@
 
 require_once __DIR__ . '/../../../common/user.head.php';
 require_once __DIR__ . '/../book.model.php';
+require_once __DIR__ . '/return.model.php';
 require_once __DIR__ . '/../../../../../core/GoogleMeetService.php';
 require_once __DIR__ . '/../../../../../core/Mailer.php';
 
@@ -123,12 +124,12 @@ BookingModel::confirmHold($holdId);
 //    These run after confirmHold so they only fire once (the hold
 //    status guard at the top of this file stops duplicate runs).
 // ------------------------------------------------------------------
-$userName      = $user['name'] ?? 'Client';
-$userEmail     = BookingModel::getUserEmail($userId);
-$counselorEmail = $counselorInfo['email'] ?? '';
+$userName        = $user['name'] ?? 'Client';
+$userEmail       = BookingModel::getUserEmail($userId);
+$counselorEmail  = $counselorInfo['email'] ?? '';
 $counselorUserId = (int)($counselorInfo['userId'] ?? 0);
 $sessionDateLabel = date('F j, Y \a\t g:i A', strtotime($slotDt));
-$sessionLink   = '/user/sessions/book/success?session_id=' . $sessionId;
+$sessionLink     = '/user/sessions/book/success?session_id=' . $sessionId;
 
 // -- 8a. Confirmation email to user --
 if ($userEmail !== '') {
@@ -177,26 +178,8 @@ if ($counselorEmail !== '') {
     Mailer::send($counselorEmail, 'NewPath  New session booked', $counselorHtml, $counselorName);
 }
 
-// -- 8c. Notification for user --
-Database::setUpConnection();
-$notifTitle = Database::$connection->real_escape_string('Session Confirmed');
-$notifMsg   = Database::$connection->real_escape_string(
-    'Your session with ' . $counselorName . ' on ' . $sessionDateLabel . ' is confirmed.'
-);
-$notifLink  = Database::$connection->real_escape_string('/user/sessions');
-Database::iud("INSERT INTO notifications (user_id, type, title, message, link)
-               VALUES ($userId, 'booking_confirmed', '$notifTitle', '$notifMsg', '$notifLink')");
-
-// -- 8d. Notification for counselor --
-if ($counselorUserId > 0) {
-    $cNotifTitle = Database::$connection->real_escape_string('New Session Booked');
-    $cNotifMsg   = Database::$connection->real_escape_string(
-        $userName . ' has booked a session on ' . $sessionDateLabel . '.'
-    );
-    $cNotifLink  = Database::$connection->real_escape_string('/counselor/sessions');
-    Database::iud("INSERT INTO notifications (user_id, type, title, message, link)
-                   VALUES ($counselorUserId, 'new_booking', '$cNotifTitle', '$cNotifMsg', '$cNotifLink')");
-}
+// -- 8c & 8d. Notifications --
+ReturnModel::insertNotifications($userId, $counselorUserId, $userName, $counselorName, $sessionDateLabel);
 
 Response::redirect('/user/sessions/book/success?session_id=' . $sessionId);
 exit;

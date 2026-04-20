@@ -4,7 +4,7 @@
  * Route: POST /user/sessions/book/free
  *
  * Confirms a free rebook when the user has an approved reschedule credit.
- * No payment is taken. The hold must already exist (created by book.controller.php).
+ * No payment is taken. The hold must already exist (created by book/index.php).
  *
  * Required POST fields:
  *   hold_id    — booking_holds.hold_id
@@ -14,6 +14,7 @@
 
 require_once __DIR__ . '/../../../common/user.head.php';
 require_once __DIR__ . '/../book.model.php';
+require_once __DIR__ . '/free.model.php';
 require_once ROOT . '/core/GoogleMeetService.php';
 require_once ROOT . '/core/Mailer.php';
 
@@ -96,20 +97,7 @@ if ($sessionId <= 0) {
 // ------------------------------------------------------------------
 // 5. Record $0 transaction (type = reschedule_credit)
 // ------------------------------------------------------------------
-Database::setUpConnection();
-$uuid      = bin2hex(random_bytes(16));
-$creditRef = 'CREDIT-' . $creditId;
-$safeRef   = Database::$connection->real_escape_string($creditRef);
-Database::iud(
-    "INSERT INTO transactions
-        (transaction_uuid, session_id, user_id, counselor_id,
-         amount, currency, payment_type, status,
-         payhere_order_id, processed_at, created_at, updated_at)
-     VALUES
-        ('$uuid', $sessionId, $userId, $counselorId,
-         0.00, 'LKR', 'session', 'completed',
-         '$safeRef', NOW(), NOW(), NOW())"
-);
+FreeBookModel::recordZeroTransaction($sessionId, $userId, $counselorId, $creditId);
 
 // ------------------------------------------------------------------
 // 6. Confirm hold + consume credit (in this order so hold is safe first)
@@ -164,23 +152,7 @@ if ($counselorEmail !== '') {
     Mailer::send($counselorEmail, 'NewPath  Rescheduled session booked', $counselorHtml, $counselorName);
 }
 
-// Notification for user
-$notifTitle = Database::$connection->real_escape_string('Rescheduled Session Confirmed');
-$notifMsg   = Database::$connection->real_escape_string(
-    'Your rescheduled session with ' . $counselorName . ' on ' . $sessionDateLabel . ' is confirmed. No charge applied.'
-);
-$notifLink  = Database::$connection->real_escape_string('/user/sessions');
-Database::iud("INSERT INTO notifications (user_id, type, title, message, link)
-               VALUES ($userId, 'booking_confirmed', '$notifTitle', '$notifMsg', '$notifLink')");
-
-// Notification for counselor
-if ($counselorUserId > 0) {
-    $cTitle = Database::$connection->real_escape_string('Rescheduled Session Booked');
-    $cMsg   = Database::$connection->real_escape_string($userName . ' completed their reschedule booking for ' . $sessionDateLabel . '.');
-    $cLink  = Database::$connection->real_escape_string('/counselor/sessions');
-    Database::iud("INSERT INTO notifications (user_id, type, title, message, link)
-                   VALUES ($counselorUserId, 'new_booking', '$cTitle', '$cMsg', '$cLink')");
-}
+FreeBookModel::insertNotifications($userId, $counselorUserId, $userName, $counselorName, $sessionDateLabel);
 
 Response::redirect('/user/sessions/book/success?session_id=' . $sessionId);
 exit;
