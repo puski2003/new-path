@@ -356,6 +356,11 @@ class CounselorData
                 ('$fullName', '$email', '$phoneNumber', '$title', '$specialty', '$bio', $experienceYears, '$education', '$certifications', '$languagesSpoken', $consultationFee, '$availabilitySchedule', '$documentsUrl', 'pending', NOW(), NOW())"
         );
 
+        require_once ROOT . '/core/Mailer.php';
+        require_once ROOT . '/core/EmailTemplates.php';
+        $tpl = EmailTemplates::applicationReceived(['name' => $input['fullName'] ?? '']);
+        Mailer::send($input['email'] ?? '', $tpl['subject'], $tpl['body'], $input['fullName'] ?? '');
+
         return ['ok' => true];
     }
 

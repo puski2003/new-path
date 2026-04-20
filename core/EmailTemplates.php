@@ -2,6 +2,32 @@
 
 class EmailTemplates
 {
+    public static function applicationReceived(array $data): array
+    {
+        $name = htmlspecialchars($data['name'] ?? 'Applicant');
+
+        $subject = 'We Received Your NewPath Counselor Application';
+
+        $body = "
+            <div style='font-family:Montserrat,sans-serif;max-width:520px;margin:auto;padding:32px;'>
+                <h2 style='color:#2c3e50;margin-bottom:8px;'>Thank you, $name!</h2>
+                <p style='color:#555;'>We have received your application to join NewPath as a counselor. Our team will review your application and get back to you as soon as possible.</p>
+
+                <div style='background:#f0f7ff;border-radius:8px;padding:20px;margin:20px 0;border-left:4px solid #3498db;'>
+                    <p style='margin:0;color:#555;'>Typical review time is <strong>2–5 business days</strong>. You will receive an email with the outcome once your application has been reviewed.</p>
+                </div>
+
+                <p style='color:#555;'>If you have any questions in the meantime, feel free to reach out to our support team.</p>
+
+                <div style='margin-top:24px;padding-top:16px;border-top:1px solid #eee;'>
+                    <p style='color:#555;margin:0;'>Warm regards,<br><strong>NewPath Support Team</strong></p>
+                </div>
+            </div>
+        ";
+
+        return ['subject' => $subject, 'body' => $body];
+    }
+
     public static function counselorApproval(array $data): array
     {
         $name = htmlspecialchars($data['name'] ?? 'Counselor');

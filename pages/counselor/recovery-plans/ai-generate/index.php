@@ -494,7 +494,7 @@ PROMPT;
 // ── OpenRouter (primary) ──────────────────────────────────────────────────────
 if ($openRouterKey !== '') {
     $requestBody = json_encode([
-        'model' => 'meta-llama/llama-3.3-70b-instruct',
+        'model' => 'google/gemma-4-26b-a4b-it:free',
         'messages' => [
             ['role' => 'system', 'content' => $systemPrompt],
             ['role' => 'user',   'content' => "Counselor request:\n" . $prompt],
