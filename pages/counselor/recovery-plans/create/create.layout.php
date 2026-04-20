@@ -149,9 +149,11 @@ $pageScripts = [
                     <div class="rp-goals-grid">
                         <div class="rp-goal-card">
                             <label>Short-term Goal</label>
-                            <input type="text" name="shortTermGoalTitle"
-                                   id="shortTermGoalTitle"
-                                   placeholder="e.g., Complete first week sober" />
+                            <textarea name="shortTermGoalTitle"
+                                      id="shortTermGoalTitle"
+                                      rows="3"
+                                      placeholder="e.g., Complete first week sober"
+                                      style="resize:vertical;"></textarea>
                             <div class="rp-goal-days">
                                 <label>Target Days:</label>
                                 <input type="number" name="shortTermGoalDays"
@@ -161,9 +163,11 @@ $pageScripts = [
                         </div>
                         <div class="rp-goal-card">
                             <label>Long-term Goal</label>
-                            <input type="text" name="longTermGoalTitle"
-                                   id="longTermGoalTitle"
-                                   placeholder="e.g., Complete full recovery program" />
+                            <textarea name="longTermGoalTitle"
+                                      id="longTermGoalTitle"
+                                      rows="3"
+                                      placeholder="e.g., Complete full recovery program"
+                                      style="resize:vertical;"></textarea>
                             <div class="rp-goal-days">
                                 <label>Target Days:</label>
                                 <input type="number" name="longTermGoalDays"
