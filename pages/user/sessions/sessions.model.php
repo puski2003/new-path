@@ -90,56 +90,34 @@ class SessionsModel
              WHERE s.user_id = $userId
                AND $where"
         );
-                $countRow = $countRs ? ($countRs->fetch_assoc() ?: []) : [];
+        $countRow = $countRs->fetch_assoc();
         $total = (int)($countRow['total'] ?? 0);
 
-                $primaryQuery =
-                        "SELECT s.session_id, s.counselor_id, s.session_datetime, s.session_type, s.status, s.location, s.meeting_link,
-                                        s.rating,
-                                        c.title AS counselor_title, c.specialty,
-                                        u.profile_picture,
-                                        COALESCE(u.display_name, CONCAT(u.first_name, ' ', u.last_name), u.username, 'Counselor') AS counselor_name,
-                                        (SELECT COUNT(1) FROM session_disputes sd
-                                         WHERE sd.session_id = s.session_id AND sd.reported_by = s.user_id) AS has_dispute,
-                                        (SELECT rr.status FROM reschedule_requests rr
-                                         WHERE rr.session_id = s.session_id
-                                         ORDER BY rr.requested_at DESC LIMIT 1) AS reschedule_status,
-                                        (SELECT rr.counselor_note FROM reschedule_requests rr
-                                         WHERE rr.session_id = s.session_id
-                                         ORDER BY rr.requested_at DESC LIMIT 1) AS reschedule_note
-                         FROM sessions s
-                         JOIN counselors c ON c.counselor_id = s.counselor_id
-                         JOIN users u ON u.user_id = c.user_id
-                         WHERE s.user_id = $userId
-                             AND $where
-                         ORDER BY $order
-                         LIMIT $safePerPage OFFSET $offset";
-
-                $rs = Database::search($primaryQuery);
-
-                // Fallback keeps sessions visible even if optional dispute/reschedule tables are missing.
-                if (!$rs) {
-                        $fallbackQuery =
-                                "SELECT s.session_id, s.counselor_id, s.session_datetime, s.session_type, s.status, s.location, s.meeting_link,
-                                                s.rating,
-                                                c.title AS counselor_title, c.specialty,
-                                                u.profile_picture,
-                                                COALESCE(u.display_name, CONCAT(u.first_name, ' ', u.last_name), u.username, 'Counselor') AS counselor_name,
-                                                0 AS has_dispute,
-                                                NULL AS reschedule_status,
-                                                '' AS reschedule_note
-                                 FROM sessions s
-                                 JOIN counselors c ON c.counselor_id = s.counselor_id
-                                 JOIN users u ON u.user_id = c.user_id
-                                 WHERE s.user_id = $userId
-                                     AND $where
-                                 ORDER BY $order
-                                 LIMIT $safePerPage OFFSET $offset";
-                        $rs = Database::search($fallbackQuery);
-                }
+        $rs = Database::search(
+            "SELECT s.session_id, s.counselor_id, s.session_datetime, s.session_type, s.status, s.location, s.meeting_link,
+                    s.rating,
+                    c.title AS counselor_title, c.specialty,
+                    u.profile_picture,
+                    COALESCE(u.display_name, CONCAT(u.first_name, ' ', u.last_name), u.username, 'Counselor') AS counselor_name,
+                    (SELECT COUNT(1) FROM session_disputes sd
+                     WHERE sd.session_id = s.session_id AND sd.reported_by = s.user_id) AS has_dispute,
+                    (SELECT rr.status FROM reschedule_requests rr
+                     WHERE rr.session_id = s.session_id
+                     ORDER BY rr.requested_at DESC LIMIT 1) AS reschedule_status,
+                    (SELECT rr.counselor_note FROM reschedule_requests rr
+                     WHERE rr.session_id = s.session_id
+                     ORDER BY rr.requested_at DESC LIMIT 1) AS reschedule_note
+             FROM sessions s
+             JOIN counselors c ON c.counselor_id = s.counselor_id
+             JOIN users u ON u.user_id = c.user_id
+             WHERE s.user_id = $userId
+               AND $where
+             ORDER BY $order
+             LIMIT $safePerPage OFFSET $offset"
+        );
 
         $items = [];
-                while ($rs && ($row = $rs->fetch_assoc())) {
+        while ($row = $rs->fetch_assoc()) {
             $items[] = self::mapSessionCard($row, $isUpcoming ? 'upcoming' : 'history');
         }
 
