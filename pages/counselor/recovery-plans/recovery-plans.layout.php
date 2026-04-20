@@ -25,6 +25,23 @@ $pageHeaderSubtitle = 'Create and manage client recovery plans';
                     <span class="rp-toolbar-title">Created Plans</span>
                     
                 </div>
+                <div class="rp-filter">
+                    <form method="GET" action="">
+                        <select name="filter">
+                            <option value="">All</option>
+                            <option value="active" <?= isset($_GET['filter']) && $_GET['filter']==='active' ? 'selected':'' ?> >Active</option>
+                            <option value="paused" <?= isset($_GET['filter']) && $_GET['filter']==='paused' ? 'selected':'' ?>>Paused</option>
+                            <option value="completed" <?= isset($_GET['filter']) && $_GET['filter']==='completed' ? 'selected':'' ?>>Completed</option>
+                            <option value="cancelled" <?= isset($_GET['filter']) && $_GET['filter']==='cancelled' ? 'selected':'' ?>>Cancelled</option>
+                            <option value="draft" <?= isset($_GET['filter']) && $_GET['filter']==='draft' ? 'selected':'' ?>>Drafted</option>
+                        </select>
+                        <button class="btn btn-bg-light-green filter-button" type="submit">
+                            <i data-lucide="filter" stroke-width="1" width="16" height="16" class="filter-icon"></i>
+                            <span>Filter</span>
+                        </button>
+                    </form>
+                </div>
+                
                 <div class="flex "style="gap:10px">
                     <a href="/counselor/recovery-plans/task-changes"
                        class="btn btn-secondary"
@@ -36,13 +53,8 @@ $pageHeaderSubtitle = 'Create and manage client recovery plans';
                     
                    + Create New Plan
                     </a>
-                    <select>
-                        <option value="">Select </option>
-                        <option value="active">Active</option>
-                        <option value="paused">Paused</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">cancelled</option>
-                    </select>
+
+                    
                 
                 </div>
             </div>
@@ -107,6 +119,11 @@ $pageHeaderSubtitle = 'Create and manage client recovery plans';
                     </div>
                     <?php endforeach; ?>
                 </div>
+            <?php elseif(!empty($filter)): ?>
+                <div class="rp-empty">
+                    <i data-lucide="clipboard-plus" stroke-width="1"></i>
+                    <p>No "<?=htmlspecialchars($filter) ?>" plans </p>
+                </div>
             <?php else: ?>
                 <div class="rp-empty">
                     <i data-lucide="clipboard-plus" stroke-width="1"></i>
@@ -115,7 +132,7 @@ $pageHeaderSubtitle = 'Create and manage client recovery plans';
                 </div>
             <?php endif; ?>
 
-        </div>
+        </div> 
     </section>
 </main>
 <script>lucide.createIcons();</script>

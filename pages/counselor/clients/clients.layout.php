@@ -14,16 +14,18 @@ $pageHeaderSubtitle = 'Your client directory';
 
         <div class="main-content-body">
 
-            <!-- Toolbar: filter + search -->
             <div class="cc-toolbar">
-                <button class="btn btn-bg-light-green filter-button" type="button">
-                    <i data-lucide="filter" stroke-width="1" width="16" height="16" class="filter-icon"></i>
-                    <span>Filter</span>
-                </button>
                 <?php require __DIR__ . '/../common/counselor.searchbar.php'; ?>
+                <select id="clientFilter" style="height:40px;">
+                    <option value="">All Sessions</option>
+                    <option value="0">0 sessions</option>
+                    <option value="1-5">1 - 5 sessions</option>
+                    <option value="6-10">6 - 10 sessions</option>
+                    <option value="11-20">11 -20sessions</option>
+                    <option value="20+">20+ sessions</option>
+                </select>
             </div>
 
-            <!-- Client cards -->
             <?php if (!empty($clients)): ?>
                 <div class="cc-clients-container">
                     <?php foreach ($clients as $client): ?>
@@ -42,19 +44,36 @@ $pageHeaderSubtitle = 'Your client directory';
     </section>
 </main>
 <script>
+    
     lucide.createIcons();
 
-    const searchInput = document.getElementById('clientSearch');
+    const searchInput  = document.getElementById('clientSearch');
+    const clientFilter = document.getElementById('clientFilter');
 
-    searchInput.addEventListener('input', function () {
-        const query = this.value.toLowerCase().trim();
-        const rows = document.querySelectorAll('.cc-client-row');
+    function applyFilters() {
+        const query        = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        const sessionRange = clientFilter.value;
+        const rows         = document.querySelectorAll('.cc-client-row');
 
         rows.forEach(row => {
-            const name = row.dataset.name ?? '';
-            row.style.display = name.includes(query) ? '' : 'none';
+            const name     = (row.dataset.name ?? '').toLowerCase();
+            const sessions = parseInt(row.dataset.sessions ?? '0');
+
+            const nameMatch = name.includes(query);
+
+            let sessionMatch = true;
+            if (sessionRange === '0')     sessionMatch = sessions === 0;
+            if (sessionRange === '1-5')   sessionMatch = sessions >= 1  && sessions <= 5;
+            if (sessionRange === '6-10')  sessionMatch = sessions >= 6  && sessions <= 10;
+            if (sessionRange === '11-20') sessionMatch = sessions >= 11 && sessions <= 20;
+            if (sessionRange === '20+')   sessionMatch = sessions > 20;
+
+            row.style.display = (nameMatch && sessionMatch) ? '' : 'none';
         });
-    });
+    }
+
+    if (searchInput) searchInput.addEventListener('input', applyFilters);
+    clientFilter.addEventListener('change', applyFilters);
 </script>
 </body>
 </html>

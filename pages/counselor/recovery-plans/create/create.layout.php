@@ -81,7 +81,7 @@ $pageScripts = [
                                 $selected = array_values(array_filter($clients, fn($c) => (int) $c['id'] === $prefilledUserId));
                                 if (!empty($selected)): ?>
                                     <span><?= htmlspecialchars($selected[0]['name']) ?></span>
-                                    <span class="remove-btn" onclick="removeClient()">×</span>
+                                    <span class="remove-btn" onclick="removeClient()">x</span>
                             <?php endif; endif; ?>
                         </div>
                     </div>

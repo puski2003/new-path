@@ -11,10 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// AI Plan Generation — calls the real Gemini backend endpoint
-// ─────────────────────────────────────────────────────────────────────────────
-
 function setupAIGeneration() {
     const btn = document.getElementById('generatePlanBtn');
     if (btn) btn.addEventListener('click', generatePlanFromAI);
@@ -62,9 +58,6 @@ async function generatePlanFromAI() {
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Fill form with generated plan data
-// ─────────────────────────────────────────────────────────────────────────────
 
 function fillFormWithPlan(plan) {
     setVal('title',                  plan.title        || '');
@@ -76,13 +69,11 @@ function fillFormWithPlan(plan) {
     setVal('notes',                  plan.notes        || '');
     setVal('customNotes',            plan.notes        || '');
 
-    // Goals
     setVal('shortTermGoalTitle', plan.shortTermGoalTitle || '');
     setVal('shortTermGoalDays',  plan.shortTermGoalDays  || '');
     setVal('longTermGoalTitle',  plan.longTermGoalTitle  || '');
     setVal('longTermGoalDays',   plan.longTermGoalDays   || '');
 
-    // Phases
     if (plan.phases) {
         for (let phaseNum = 1; phaseNum <= 3; phaseNum++) {
             const phaseData = plan.phases[String(phaseNum)] || plan.phases[phaseNum];
@@ -125,9 +116,6 @@ function setVal(id, value) {
     if (el) el.value = value;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Task & milestone management
-// ─────────────────────────────────────────────────────────────────────────────
 
 function addTask(phaseNum) {
     addTaskWithValue(phaseNum, '', 'custom', '');
@@ -181,9 +169,6 @@ function addMilestoneWithValue(phaseNum, value) {
     );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Client selection (create form only)
-// ─────────────────────────────────────────────────────────────────────────────
 
 function showClientDropdown() {
     const select    = document.getElementById('assignedTo');
@@ -216,9 +201,6 @@ function removeClient() {
     if (button)    button.style.display = 'inline-flex';
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Form validation
-// ─────────────────────────────────────────────────────────────────────────────
 
 function validateForm() {
     let valid = true;
@@ -267,9 +249,6 @@ function clearErrors() {
     document.querySelectorAll('.error-border').forEach(function (el) { el.classList.remove('error-border'); });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Utilities
-// ─────────────────────────────────────────────────────────────────────────────
 
 function initializeDates() {
     const startDate = document.getElementById('startDate');

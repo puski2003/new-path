@@ -52,7 +52,7 @@ class CounselorDashboardModel
                 COALESCE(u.display_name, CONCAT(u.first_name, ' ', u.last_name), u.username, 'Client') AS user_name
             FROM sessions s
             JOIN users u ON u.user_id = s.user_id
-            WHERE s.counselor_id = $safeCounselorId
+            WHERE s.counselor_id = $safeCounselorId 
                AND s.session_datetime > NOW()
                AND s.status IN ('scheduled', 'confirmed')
             ORDER BY s.session_datetime ASC"

@@ -8,10 +8,20 @@ class CounselorSessionsModel
     {
         return CounselorData::getSessionsByCounselor($counselorId);
     }
+    public static function createReport(array $input){
+        $counselorUserId = $input['counselorUser_id'] ?? 0;
+        $sessionId = $input['session_id'] ?? 0;
+        $reason = $input['reason'] ?? 'other';
+        $desc = $input['description'] ?? '';
+        $rs=Database::iud("INSERT INTO session_disputes(session_id,reported_by,reason,description,created_at)
+        VALUES ('$sessionId','$counselorUserId','$reason','$desc',NOW())");
+        if($rs){
+            return ['ok' => true];
+        }else{
+            return ['ok' => false];
+        }
 
-    // ------------------------------------------------------------------
-    // Reschedule requests
-    // ------------------------------------------------------------------
+    }
 
     public static function getPendingRescheduleRequests(int $counselorId): array
     {
@@ -69,14 +79,12 @@ class CounselorSessionsModel
         Database::setUpConnection();
         $safeNote = Database::$connection->real_escape_string(trim($note));
 
-        // Update request
         Database::iud(
             "UPDATE reschedule_requests
              SET status = 'approved', counselor_note = '$safeNote', reviewed_at = NOW()
              WHERE request_id = $requestId"
         );
 
-        // Cancel the session
         Database::iud(
             "UPDATE sessions
              SET status = 'cancelled', cancelled_by = $counselorUserId,

@@ -2,7 +2,6 @@
 
 $errorMessage = null;
 if (Request::isPost()) {
-    // Handle supporting document upload (PRD §2.4)
     $uploadedDocPath = null;
     if (!empty($_FILES['documentsFile']) && (int)($_FILES['documentsFile']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK) {
         $uploadedDocPath = CounselorApplicationsModel::handleDocumentUpload($_FILES['documentsFile']);

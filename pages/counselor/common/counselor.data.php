@@ -22,7 +22,7 @@ class CounselorData
              LEFT JOIN recovery_plans rp ON rp.user_id = u.user_id AND rp.counselor_id = $safeCounselorId
              WHERE s.counselor_id = $safeCounselorId
              GROUP BY u.user_id, u.email, u.display_name, u.first_name, u.last_name, u.profile_picture, u.phone_number, u.is_active
-             ORDER BY MAX(s.session_datetime) DESC, u.display_name ASC"
+             ORDER BY MAX(s.session_datetime) DESC, u.display_name ASC "
         );
 
         $clients = [];
@@ -52,9 +52,6 @@ class CounselorData
         $safeCounselorId = max(0, $counselorId);
         $safeClientUserId = max(0, $clientUserId);
 
-        // Per PRD §3.3 and §9.1 (GDPR/PDPA compliance):
-        // Counselors may only see basic demographics + session/plan context.
-        // Private health data (sobriety, urge logs, check-ins, journals) must NOT be fetched.
         $rs = Database::search(
             "SELECT u.user_id, u.email, u.display_name, u.first_name, u.last_name,
                     u.profile_picture, u.phone_number, u.is_active, u.bio, u.created_at
@@ -76,7 +73,6 @@ class CounselorData
             ?: trim(($client['first_name'] ?? '') . ' ' . ($client['last_name'] ?? ''))
             ?: 'Client';
 
-        // Only fetch sessions that belong to THIS counselor
         $sessionStatsRs = Database::search(
             "SELECT COUNT(*) AS total_sessions,
                     SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed_sessions,
@@ -88,7 +84,6 @@ class CounselorData
         );
         $sessionStats = $sessionStatsRs ? $sessionStatsRs->fetch_assoc() : [];
 
-        // Only fetch recovery plans assigned by THIS counselor
         $planRs = Database::search(
             "SELECT plan_id, title, description, status, progress_percentage, custom_notes
              FROM recovery_plans
@@ -161,15 +156,22 @@ class CounselorData
         $rs = Database::search(
             "SELECT s.session_id, s.user_id, s.session_datetime, s.session_type, s.status, s.location, s.meeting_link, s.session_notes,
                     COALESCE(u.display_name, CONCAT(u.first_name, ' ', u.last_name), u.username, 'Client') AS user_name,
-                    u.profile_picture
-             FROM sessions s
-             INNER JOIN users u ON u.user_id = s.user_id
-             WHERE s.counselor_id = $safeCounselorId
-             ORDER BY s.session_datetime DESC"
+                    u.profile_picture,sd.status
+            FROM sessions s
+            INNER JOIN users u ON u.user_id = s.user_id
+            LEFT JOIN session_disputes sd ON s.session_id = sd.session_id AND sd.status = 'pending'
+            WHERE s.counselor_id = $safeCounselorId
+            ORDER BY s.session_datetime DESC"
         );
 
         $sessions = [];
         while ($rs && ($row = $rs->fetch_assoc())) {
+            $isReported=$row['status'];
+            if (!empty($isReported) ) {
+                $isReported=true;
+            }else{
+                $isReported=false;
+            }
             $dateTime = $row['session_datetime'] ?? null;
             $timestamp = $dateTime ? strtotime($dateTime) : false;
             $sessions[] = [
@@ -184,6 +186,7 @@ class CounselorData
                 'sessionNotes' => $row['session_notes'] ?? '',
                 'meetingLink' => $row['meeting_link'] ?? '',
                 'isUpcoming' => $timestamp ? $timestamp >= time() && in_array($row['status'], ['scheduled', 'confirmed', 'in_progress'], true) : false,
+                'isReported'=>$isReported
             ];
         }
 
@@ -363,8 +366,6 @@ class CounselorData
             return false;
         }
 
-        // Per PRD §2.3 and §3.4: counselors may only create plans for users who have
-        // booked at least one session with them.
         $bookingCheck = Database::search(
             "SELECT 1 FROM sessions
              WHERE user_id = $userId AND counselor_id = $counselorId

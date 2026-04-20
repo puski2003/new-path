@@ -18,6 +18,7 @@ $pageScripts = [
 <!DOCTYPE html>
 <html lang="en">
 <?php $pageTitle = 'Edit Recovery Plan'; $pageStyle = ['counselor/viewRecoveryPlan']; require __DIR__ . '/../../common/counselor.html.head.php'; ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <body>
 <main class="main-container theme-counselor">
     <?php require __DIR__ . '/../../common/counselor.sidebar.php'; ?>
@@ -236,6 +237,63 @@ $pageScripts = [
         </div>
     </section>
 </main>
+<div id="pdf-content" style="display:none; padding:20px; font-family:Arial;">
+
+    <h1><?= htmlspecialchars($plan['title']) ?></h1>
+    <br>
+    <p><strong>Client:</strong> <?= htmlspecialchars($plan['clientName']) ?></p>
+    <p><strong>Status:</strong> <?= htmlspecialchars($plan['status']) ?></p>
+    <br>
+    <hr>
+    <br>
+    <h3>Description</h3>
+    <p><?= nl2br(htmlspecialchars($plan['description'])) ?></p>
+    <br>
+    <h3>Phases & Tasks</h3>
+    <br>
+    <?php foreach ([1 => 'Stabilization', 2 => 'Reduction', 3 => 'Maintenance'] as $phaseNum => $phaseName): ?>
+        <h4>Phase <?= $phaseNum ?>: <?= $phaseName ?></h4>
+        <ul>
+        <?php foreach ($tasks as $task): if ((int)$task['phase'] !== $phaseNum) continue; ?>
+            <li><?= htmlspecialchars($task['title']) ?> (<?= htmlspecialchars($task['taskType']) ?>)</li>
+        <?php endforeach; ?>
+        </ul>
+    <?php endforeach; ?>
+    <br>
+    <h3>Goals</h3>
+    <p><strong>Short-term:</strong> <?= htmlspecialchars($shortGoal['title'] ?? '') ?></p>
+    <p><strong>Long-term:</strong> <?= htmlspecialchars($longGoal['title'] ?? '') ?></p>
+    <br>
+    <h3>Notes</h3>
+    <p><?= nl2br(htmlspecialchars($plan['customNotes'])) ?></p>
+
+</div>
 <?php require __DIR__ . '/../../common/counselor.footer.php'; ?>
 </body>
+<script>
+    function exportPDF() {
+        
+        const element=document.getElementById('pdf-content');
+        const recoveryTitle = document.querySelector('.rp-hero-title').textContent;
+
+        element.style.display = 'block';
+
+        const opt = {
+            margin: 0.5,
+            filename: `${recoveryTitle}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf()
+            .set(opt)
+            .from(element)
+            .save()
+            .then(() => {
+                element.style.display = 'none'; // hide again
+            });
+    }
+</script>
 </html>
+

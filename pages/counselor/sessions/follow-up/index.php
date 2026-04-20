@@ -1,10 +1,5 @@
 <?php
-/**
- * /counselor/sessions/follow-up — Counselor side of a post-session follow-up thread.
- * GET  ?session_id=X  → view thread
- * POST (ajax=send)    → send a message (JSON)
- * POST               → send a message (form fallback)
- */
+
 require_once __DIR__ . '/../../common/counselor.head.php';
 
 $counselorId     = (int) ($user['counselorId'] ?? 0);

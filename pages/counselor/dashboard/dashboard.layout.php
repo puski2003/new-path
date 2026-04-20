@@ -94,7 +94,7 @@ require_once __DIR__ . '/../common/counselor.html.head.php';
                     <div class="col-2-row-1 dashboard-card counselor-upcoming-section">
                         <div class="card-header">
                             <h3>Upcoming Sessions</h3>
-                        </div>
+                        </div> 
                         <div class="counselor-session-list">
                             <?php if (!empty($upcomingSessions)): ?>
                                 <?php foreach ($upcomingSessions as $session): ?>

@@ -21,7 +21,6 @@ $pageScripts = ['/assets/js/counselor/client-profile/clientProfile.js'];
 
         <div class="main-content-body">
 
-            <!-- Back button -->
             <div class="cc-back-row">
                 <a class="cc-back-btn" href="/counselor/clients">
                     <i data-lucide="arrow-left" stroke-width="1.8"></i>
@@ -29,7 +28,6 @@ $pageScripts = ['/assets/js/counselor/client-profile/clientProfile.js'];
                 </a>
             </div>
 
-            <!-- ── Hero profile card ── -->
             <div class="cc-profile-card">
                 <div class="cc-profile-avatar">
                     <img src="<?= htmlspecialchars($clientProfile['avatarUrl']) ?>"
@@ -58,7 +56,6 @@ $pageScripts = ['/assets/js/counselor/client-profile/clientProfile.js'];
                 </div>
             </div>
 
-            <!-- ── Recovery plan section ── -->
             <div class="cc-section">
                 <div class="cc-section-header">
                     <h4>Recovery Plan</h4>
@@ -98,7 +95,6 @@ $pageScripts = ['/assets/js/counselor/client-profile/clientProfile.js'];
                 <?php endif; ?>
             </div>
 
-            <!-- ── Community activity section ── -->
             <div class="cc-section">
                 <div class="cc-section-header">
                     <h4>Community Activity</h4>
@@ -163,7 +159,6 @@ $pageScripts = ['/assets/js/counselor/client-profile/clientProfile.js'];
                 </div>
             </div>
 
-            <!-- ── Session notes section ── -->
             <div class="cc-section">
                 <div class="cc-section-header">
                     <h4>Session Notes</h4>
@@ -171,7 +166,6 @@ $pageScripts = ['/assets/js/counselor/client-profile/clientProfile.js'];
                 </div>
                 <p class="cc-notes-text"><?= htmlspecialchars($clientProfile['sessionNotes']) ?></p>
             </div>
-
         </div>
     </section>
 </main>
