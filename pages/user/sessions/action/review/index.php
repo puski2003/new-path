@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../common/user.head.php';
+require_once __DIR__ . '/../../../common/user.head.php';
 require_once __DIR__ . '/review.model.php';
 
 $sessionId  = (int) Request::post('session_id');
