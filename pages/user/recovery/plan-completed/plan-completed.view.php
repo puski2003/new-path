@@ -91,23 +91,6 @@ $stats = $data['stats'];
                         </a>
                     </div>
 
-                    <div class="plan-card" style="display:flex;align-items:center;gap:var(--spacing-lg);">
-                        <div class="plan-icon" style="flex-shrink:0;">
-                            <i data-lucide="sun" style="width:22px;height:22px;"></i>
-                        </div>
-                        <div style="flex:1;min-width:0;">
-                            <h4 style="font-size:var(--font-size-base);font-weight:var(--font-weight-semibold);margin-bottom:4px;">
-                                I'm doing well — Post Recovery
-                            </h4>
-                            <p style="font-size:var(--font-size-sm);color:var(--color-text-muted);margin:0;">
-                                Transition to post-recovery mode. Explore opportunities and maintain your progress independently.
-                            </p>
-                        </div>
-                        <a href="/user/post-recovery" class="btn btn-secondary" style="flex-shrink:0;white-space:nowrap;">
-                            Go There
-                        </a>
-                    </div>
-
                 </div>
 
                 <div style="text-align:center;margin-top:var(--spacing-xl);">
