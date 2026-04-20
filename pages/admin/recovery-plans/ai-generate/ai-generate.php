@@ -45,17 +45,70 @@ function extractJsonObject(string $text): string
     return substr($text, $start, $end - $start + 1);
 }
 
+/**
+ * Escape raw control characters inside JSON string values.
+ * LLMs often emit raw newlines inside strings, which makes json_decode fail.
+ */
+function sanitizeJson(string $json): string
+{
+    $out     = '';
+    $inStr   = false;
+    $escaped = false;
+    $len     = strlen($json);
+
+    for ($i = 0; $i < $len; $i++) {
+        $ch = $json[$i];
+
+        if ($escaped) {
+            $out    .= $ch;
+            $escaped = false;
+            continue;
+        }
+
+        if ($ch === '\\' && $inStr) {
+            $out    .= $ch;
+            $escaped = true;
+            continue;
+        }
+
+        if ($ch === '"') {
+            $inStr = !$inStr;
+            $out  .= $ch;
+            continue;
+        }
+
+        if ($inStr) {
+            if ($ch === "\n") { $out .= '\\n';  continue; }
+            if ($ch === "\r") { $out .= '\\r';  continue; }
+            if ($ch === "\t") { $out .= '\\t';  continue; }
+        }
+
+        $out .= $ch;
+    }
+
+    return $out;
+}
+
 function decodePlanPayload(string $text): ?array
 {
     $trimmed    = trim($text);
     $candidates = array_values(array_filter([$trimmed, extractJsonObject($trimmed)]));
     foreach ($candidates as $candidate) {
+        // 1. Standard decode
         $decoded = json_decode($candidate, true);
         if (is_array($decoded)) return $decoded;
-        $relaxed = preg_replace("/,\s*([}\]])/", '$1', $candidate);
-        if (!is_string($relaxed)) continue;
-        $decoded = json_decode($relaxed, true);
+
+        // 2. Sanitize raw control chars inside strings (common LLM issue), retry
+        $sanitized = sanitizeJson($candidate);
+        $decoded   = json_decode($sanitized, true);
         if (is_array($decoded)) return $decoded;
+
+        // 3. Trailing-comma fix on sanitized candidate
+        $relaxed = preg_replace("/,\s*([}\]])/", '$1', $sanitized);
+        if (is_string($relaxed)) {
+            $decoded = json_decode($relaxed, true);
+            if (is_array($decoded)) return $decoded;
+        }
     }
     return null;
 }
@@ -237,7 +290,7 @@ Return ONLY valid JSON with exactly this structure:
   "notes": "Private notes about this plan"
 }
 
-Rules: task.type must be one of: custom, journal, meditation, session, exercise. task.recurrence must be one of: "" (one-time), "daily", "weekly", "bi-weekly". Provide 3-5 tasks per phase. Dates must use YYYY-MM-DD. No markdown fences. No text before or after the JSON.
+Rules: task.type must be one of: custom, journal, meditation, session, exercise. task.recurrence must be one of: "" (one-time), "daily", "weekly", "bi-weekly". Provide 3-5 tasks per phase. Dates must use YYYY-MM-DD. All string values must be on a single line — no literal newlines inside strings. No markdown fences. No text before or after the JSON.
 PROMPT;
 
 if ($openRouterKey !== '') {

@@ -23,9 +23,9 @@ class UrgeHistoryModel
                 'urgeId' => (int)$row['urge_id'],
                 'intensity' => (int)$row['intensity'],
                 'triggerCategory' => $row['trigger_category'] ?? '',
-                'copingStrategy' => $row['coping_strategy_used'] ?? '',
+                'copingStrategy' => Encryption::decrypt($row['coping_strategy_used'] ?? ''),
                 'outcome' => $row['outcome'] ?? '',
-                'notes' => $row['notes'] ?? '',
+                'notes' => Encryption::decrypt($row['notes'] ?? ''),
                 'loggedAt' => date('M j, Y g:i A', strtotime($row['logged_at'])),
             ];
         }

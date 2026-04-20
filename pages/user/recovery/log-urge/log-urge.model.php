@@ -43,9 +43,9 @@ class LogUrgeModel
         Database::setUpConnection();
         $conn = Database::$connection;
         $safeCategory = $conn->real_escape_string($category);
-        $safeStrategy = $conn->real_escape_string($strategy);
-        $safeOutcome = $conn->real_escape_string($outcome);
-        $safeNotes = $conn->real_escape_string($notes);
+        $safeStrategy = $conn->real_escape_string(Encryption::encrypt($strategy));
+        $safeOutcome  = $conn->real_escape_string($outcome);
+        $safeNotes    = $conn->real_escape_string(Encryption::encrypt($notes));
 
         Database::iud("INSERT INTO urge_logs
             (user_id, intensity, trigger_category, coping_strategy_used, outcome, notes)

@@ -40,6 +40,7 @@ class FollowUpModel
         $messages = [];
         if ($rs) {
             while ($row = $rs->fetch_assoc()) {
+                $row['message'] = Encryption::decrypt($row['message']);
                 $messages[] = $row;
             }
         }
@@ -59,6 +60,7 @@ class FollowUpModel
         ");
         $rows = [];
         while ($rs && ($row = $rs->fetch_assoc())) {
+            $row['message'] = Encryption::decrypt($row['message']);
             $rows[] = $row;
         }
         return $rows;
@@ -67,7 +69,7 @@ class FollowUpModel
     public static function sendMessage(int $sessionId, int $userId, string $msg, int $counselorUserId): int
     {
         Database::setUpConnection();
-        $safeMsg = Database::$connection->real_escape_string($msg);
+        $safeMsg = Database::$connection->real_escape_string(Encryption::encrypt($msg));
         Database::iud("INSERT INTO session_messages (session_id, sender_id, message) VALUES ($sessionId, $userId, '$safeMsg')");
         $newMsgId = (int)Database::$connection->insert_id;
 

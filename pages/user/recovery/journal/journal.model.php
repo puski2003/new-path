@@ -60,6 +60,8 @@ class JournalModel
         $entries = [];
         if ($rs) {
             while ($row = $rs->fetch_assoc()) {
+                $row['title']   = Encryption::decrypt($row['title']);
+                $row['content'] = Encryption::decrypt($row['content']);
                 $entries[] = $row;
             }
         }
@@ -98,7 +100,10 @@ class JournalModel
         );
         if (!$rs || $rs->num_rows === 0) return null;
 
-        return $rs->fetch_assoc();
+        $row = $rs->fetch_assoc();
+        $row['title']   = Encryption::decrypt($row['title']);
+        $row['content'] = Encryption::decrypt($row['content']);
+        return $row;
     }
 
     public static function saveEntry(int $userId, array $data): bool
@@ -114,8 +119,8 @@ class JournalModel
 
         Database::setUpConnection();
         $conn = Database::$connection;
-        $safeTitle = $conn->real_escape_string($title);
-        $safeContent = $conn->real_escape_string($content);
+        $safeTitle = $conn->real_escape_string(Encryption::encrypt($title));
+        $safeContent = $conn->real_escape_string(Encryption::encrypt($content));
         $safeMood = $conn->real_escape_string($mood);
         $catVal = $categoryId > 0 ? $categoryId : 'NULL';
 

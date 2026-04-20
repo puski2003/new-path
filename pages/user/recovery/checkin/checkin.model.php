@@ -17,7 +17,10 @@ class CheckinModel
             "SELECT checkin_id, mood_rating, mood_label, energy_level, sleep_quality, stress_level, notes, is_sober
              FROM daily_checkins WHERE user_id = $userId AND checkin_date = '$today' LIMIT 1"
         );
-        return ($rs && $rs->num_rows > 0) ? $rs->fetch_assoc() : null;
+        if (!$rs || $rs->num_rows === 0) return null;
+        $row = $rs->fetch_assoc();
+        $row['notes'] = Encryption::decrypt($row['notes']);
+        return $row;
     }
 
     public static function getStats(int $userId): array
@@ -66,7 +69,7 @@ class CheckinModel
 
         Database::setUpConnection();
         $conn = Database::$connection;
-        $safeNotes = $conn->real_escape_string($notes);
+        $safeNotes     = $conn->real_escape_string(Encryption::encrypt($notes));
         $safeMoodLabel = $conn->real_escape_string($moodLabel);
 
         $existing = self::getTodayCheckin($userId);

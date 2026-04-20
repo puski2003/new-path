@@ -131,13 +131,7 @@
                             <?php endif; ?>
                         </div>
                         <div class="payment-details">
-                            <div class="payment-method">
-                                <img src="/assets/img/visa.png" alt="Payment method" class="payment-icon" />
-                                <span class="payment-card"><?= htmlspecialchars($sessionData['cardNumber']) ?></span>
-                                <?php if (!empty($sessionData['cardExpiry'])): ?>
-                                    <span class="payment-expiry"><?= htmlspecialchars($sessionData['cardExpiry']) ?></span>
-                                <?php endif; ?>
-                            </div>
+                            
                             <?php if (!empty($sessionData['receiptUrl'])): ?>
                                 <a class="btn btn-bg-light-green download-receipt-btn" href="<?= htmlspecialchars($sessionData['receiptUrl']) ?>" target="_blank" rel="noopener">Download receipt (PDF)</a>
                             <?php else: ?>

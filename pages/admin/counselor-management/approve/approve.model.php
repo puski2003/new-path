@@ -75,8 +75,8 @@ class ApproveApplicationModel
             $displayName = self::esc($application['fullName']);
 
             Database::iud(
-                "INSERT INTO users (email, username, password_hash, salt, role, display_name, phone_number, is_active, created_at, updated_at)
-                 VALUES ('$safeEmail', '$safeUsername', '$passwordHash', '', 'counselor', '$displayName', '" . self::esc($application['phoneNumber']) . "', 1, NOW(), NOW())"
+                "INSERT INTO users (email, username, password_hash, salt, role, display_name, phone_number, is_active, must_change_password, created_at, updated_at)
+                 VALUES ('$safeEmail', '$safeUsername', '$passwordHash', '', 'counselor', '$displayName', '" . self::esc($application['phoneNumber']) . "', 1, 1, NOW(), NOW())"
             );
             $userId = (int) Database::$connection->insert_id;
         }

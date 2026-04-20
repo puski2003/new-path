@@ -33,7 +33,12 @@ if (Request::isPost()) {
             ]);
 
             Auth::setTokenCookie($token);
-            Response::redirect('/counselor/dashboard');
+
+            if (!empty($user['must_change_password'])) {
+                Response::redirect('/counselor/set-password');
+            } else {
+                Response::redirect('/counselor/dashboard');
+            }
         }
     }
 }

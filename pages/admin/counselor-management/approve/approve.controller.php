@@ -11,8 +11,15 @@ $success = false;
 if (!$application) {
     $error = 'Application not found or already processed.';
 } else {
-    $username = ApproveApplicationModel::generateUsername($application['fullName']);
-    $password = PasswordPool::getRandom();
+    if (Request::isPost()) {
+        $username = trim(Request::post('generated_username') ?? '');
+        $password = trim(Request::post('generated_password') ?? '');
+        if ($username === '') $username = ApproveApplicationModel::generateUsername($application['fullName']);
+        if ($password === '') $password = PasswordPool::getRandom();
+    } else {
+        $username = ApproveApplicationModel::generateUsername($application['fullName']);
+        $password = PasswordPool::getRandom();
+    }
 
     if (Request::isPost()) {
         $subject = trim(Request::post('subject') ?? '');

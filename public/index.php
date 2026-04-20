@@ -9,6 +9,7 @@ define('APP_BASE', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'));
 require_once ROOT . '/config/env.php';
 require_once ROOT . '/config/database.php';
 require_once ROOT . '/core/Auth.php';
+require_once ROOT . '/core/Encryption.php';
 require_once ROOT . '/core/Response.php';
 require_once ROOT . '/core/Request.php';
 require_once ROOT . '/core/Pagination.php';

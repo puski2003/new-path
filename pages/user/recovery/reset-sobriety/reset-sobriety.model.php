@@ -18,7 +18,7 @@ class ResetSobrietyModel
         }
 
         Database::setUpConnection();
-        $safeNotes = Database::$connection->real_escape_string($reason);
+        $safeNotes = Database::$connection->real_escape_string(Encryption::encrypt($reason));
         Database::iud(
             "INSERT INTO relapse_history
                 (user_id, relapse_date, days_sober_before, trigger_notes, counselor_notified)

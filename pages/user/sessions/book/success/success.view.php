@@ -18,9 +18,7 @@
                     <p>Your session has been successfully scheduled</p>
                 </div>
                 <div style="width: 25%"></div>
-                <img src="/assets/img/session-confirm.svg"
-                    alt="Booking Confirmed"
-                    class="checkout-image" />
+                
             </div>
 
             <div class="main-content-body">

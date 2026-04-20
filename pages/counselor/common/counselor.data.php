@@ -307,6 +307,7 @@ class CounselorData
         Database::setUpConnection();
         $email = self::esc($input['email'] ?? '');
         $exists = Database::search("SELECT application_id FROM counselor_applications WHERE email = '$email' LIMIT 1");
+        
         if ($exists && $exists->num_rows > 0) {
             return ['ok' => false, 'error' => 'An application already exists for this email address.'];
         }

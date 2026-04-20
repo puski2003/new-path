@@ -32,6 +32,8 @@ require_once __DIR__ . '/../../common/admin.html.head.php';
                 </div>
 
                 <form method="POST" action="/admin/counselor-management/approve?id=<?= (int) $applicationId ?>">
+                    <input type="hidden" name="generated_password" value="<?= htmlspecialchars($password ?? '') ?>">
+                    <input type="hidden" name="generated_username" value="<?= htmlspecialchars($username ?? '') ?>">
                     <div style="margin-bottom: 16px;">
                         <label for="subject" style="display: block; font-weight: 600; margin-bottom: 8px;">Email Subject</label>
                         <input type="text" id="subject" name="subject" 

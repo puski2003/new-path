@@ -10,8 +10,8 @@ class EmergencyContactModel
 
         Database::setUpConnection();
         $conn = Database::$connection;
-        $safeName = $conn->real_escape_string(trim($name));
-        $safePhone = $conn->real_escape_string(trim($phone));
+        $safeName  = $conn->real_escape_string(Encryption::encrypt(trim($name)));
+        $safePhone = $conn->real_escape_string(Encryption::encrypt(trim($phone)));
 
         $exists = Database::search("SELECT profile_id FROM user_profiles WHERE user_id = $userId LIMIT 1");
         if ($exists && $exists->num_rows > 0) {
