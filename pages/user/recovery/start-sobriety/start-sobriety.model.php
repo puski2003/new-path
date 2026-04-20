@@ -2,13 +2,18 @@
 
 class StartSobrietyModel
 {
-    public static function start(int $userId): bool
+    public static function start(int $userId, ?string $date = null): bool
     {
         if ($userId <= 0) return false;
 
+        $safeDate = 'CURDATE()';
+        if ($date && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) && strtotime($date) <= time()) {
+            $safeDate = "'" . $date . "'";
+        }
+
         Database::iud(
             "UPDATE user_profiles
-             SET sobriety_start_date = CURDATE(), updated_at = NOW()
+             SET sobriety_start_date = $safeDate, updated_at = NOW()
              WHERE user_id = $userId
                AND sobriety_start_date IS NULL"
         );
