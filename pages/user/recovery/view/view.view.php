@@ -26,7 +26,8 @@ $isSelfManaged = $data['isSelfManaged'];
                 <div>
                     <h2><?= htmlspecialchars($plan['title']) ?></h2>
                     <p style="font-size:var(--font-size-sm);color:var(--color-text-secondary);margin-top:2px;">
-                        Plan details, goals and tasks.
+                        Plan details, goals and tasks &nbsp;·&nbsp;
+                        <span style="color:var(--color-primary);font-weight:600;"><?= (int)$plan['progressPercentage'] ?>% complete</span>
                     </p>
                 </div>
             </div>
@@ -38,7 +39,7 @@ $isSelfManaged = $data['isSelfManaged'];
         </div>
 
         <div class="main-content-body">
-            <div class="plans-container" >
+            <div class="plans-container">
 
                 <?php if (($plan['assignedStatus'] ?? '') === 'pending'): ?>
                 <div style="display:flex;gap:12px;margin-bottom:var(--spacing-lg);">
@@ -53,28 +54,11 @@ $isSelfManaged = $data['isSelfManaged'];
                 </div>
                 <?php endif; ?>
 
-                <!-- Plan Overview Card -->
-                <div class="plan-card active" style="margin-bottom:0;">
-                    <div class="plan-card-header">
-                        <h4 class="plan-title"><?= htmlspecialchars($plan['title']) ?></h4>
-                        <span class="plan-status status-<?= htmlspecialchars($plan['status']) ?>"><?= ucfirst(htmlspecialchars($plan['status'])) ?></span>
-                    </div>
-                    <?php if (!empty($plan['description'])): ?>
-                    <p class="plan-description"><?= htmlspecialchars($plan['description']) ?></p>
-                    <?php endif; ?>
-                    <div class="plan-progress">
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width:<?= (int)$plan['progressPercentage'] ?>%"></div>
-                        </div>
-                        <span class="progress-text"><?= (int)$plan['progressPercentage'] ?>%</span>
-                    </div>
-                </div>
-
                 <!-- Two-column layout: Goals + Tasks -->
                 <div style="display:grid;grid-template-columns:1fr 2fr;gap:var(--spacing-xl);margin-top:var(--spacing-xl);">
 
                     <!-- Goals -->
-                    <div>
+                    <div style="min-width:0;">
                         <div class="plans-section">
                             <h3 class="section-title" style="font-size:var(--font-size-base);margin-bottom:var(--spacing-sm);">
                                 <span class="section-icon active">
@@ -109,7 +93,7 @@ $isSelfManaged = $data['isSelfManaged'];
                     </div>
 
                     <!-- Tasks grouped by phase -->
-                    <div>
+                    <div style="min-width:0;">
                         <div class="plans-section">
                             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--spacing-sm);">
                                 <h3 class="section-title" style="font-size:var(--font-size-base);margin:0;">
