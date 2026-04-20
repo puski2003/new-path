@@ -44,7 +44,7 @@ class CounselorsModel
                 c.specialty AS specialty_short,
                 c.experience_years,
                 c.consultation_fee,
-                (SELECT ROUND(AVG(rating), 1) FROM sessions WHERE counselor_id = c.counselor_id AND rating IS NOT NULL) AS rating_value
+                (SELECT ROUND(AVG(s.rating), 1) FROM sessions s WHERE s.counselor_id = c.counselor_id AND s.rating IS NOT NULL AND s.status = 'completed') AS rating_value
             FROM counselors c
             INNER JOIN users u ON c.user_id = u.user_id
             $whereSql
@@ -91,8 +91,8 @@ class CounselorsModel
                 c.experience_years,
                 c.consultation_fee,
                 c.availability_schedule,
-                COALESCE(NULLIF(c.rating, 0), (SELECT ROUND(AVG(s.rating), 1) FROM sessions s WHERE s.counselor_id = c.counselor_id AND s.rating IS NOT NULL)) AS rating_value,
-                COALESCE(NULLIF(c.total_reviews, 0), (SELECT COUNT(*) FROM sessions s2 WHERE s2.counselor_id = c.counselor_id AND (s2.review IS NOT NULL OR s2.rating IS NOT NULL))) AS total_reviews
+                (SELECT ROUND(AVG(s.rating), 1) FROM sessions s WHERE s.counselor_id = c.counselor_id AND s.rating IS NOT NULL AND s.status = 'completed') AS rating_value,
+                (SELECT COUNT(*) FROM sessions s2 WHERE s2.counselor_id = c.counselor_id AND s2.rating IS NOT NULL AND s2.status = 'completed') AS total_reviews
             FROM counselors c
             INNER JOIN users u ON c.user_id = u.user_id
             WHERE c.counselor_id = $counselorId AND u.role = 'counselor'
