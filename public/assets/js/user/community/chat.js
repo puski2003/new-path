@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (directTab) {
                     directTab.classList.add('chat-tab-content--active');
                     directTab.style.display = 'flex';
+                    closeGroupConversation();
                 }
             } else if (targetTab === 'support') {
                 const supportTab = document.getElementById('supportTab');
