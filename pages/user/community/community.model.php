@@ -591,28 +591,30 @@ class DirectMessageModel
         return $conversations;
     }
 
-    public static function getConversationMessages(int $userId, int $conversationId, int $limit = 50): array
+    public static function getConversationMessages(int $userId, int $conversationId, int $limit = 50, int $afterId = 0): array
     {
         $check = Database::search(
-            "SELECT conversation_id FROM dm_conversations 
-             WHERE conversation_id = $conversationId 
+            "SELECT conversation_id FROM dm_conversations
+             WHERE conversation_id = $conversationId
              AND (user1_id = $userId OR user2_id = $userId)
              LIMIT 1"
         );
-        
+
         if (!$check || $check->num_rows === 0) {
             return [];
         }
-        
+
         Database::iud(
-            "UPDATE direct_messages SET is_read = 1 
-             WHERE conversation_id = $conversationId 
-             AND sender_id != $userId 
+            "UPDATE direct_messages SET is_read = 1
+             WHERE conversation_id = $conversationId
+             AND sender_id != $userId
              AND is_read = 0"
         );
-        
+
+        $afterFilter = $afterId > 0 ? "AND m.message_id > $afterId" : '';
+
         $sql = "
-            SELECT 
+            SELECT
                 m.message_id,
                 m.sender_id,
                 m.content,
@@ -623,6 +625,7 @@ class DirectMessageModel
             FROM direct_messages m
             JOIN users u ON u.user_id = m.sender_id
             WHERE m.conversation_id = $conversationId
+            $afterFilter
             ORDER BY m.created_at ASC
             LIMIT $limit
         ";
@@ -1037,20 +1040,22 @@ class SupportGroupModel
         return true;
     }
 
-    public static function getGroupMessages(int $groupId, int $userId, int $limit = 50): array
+    public static function getGroupMessages(int $groupId, int $userId, int $limit = 50, int $afterId = 0): array
     {
         $check = Database::search(
-            "SELECT membership_id FROM support_group_members 
+            "SELECT membership_id FROM support_group_members
              WHERE group_id = $groupId AND user_id = $userId
              LIMIT 1"
         );
-        
+
         if (!$check || $check->num_rows === 0) {
             return [];
         }
-        
+
+        $afterFilter = $afterId > 0 ? "AND m.message_id > $afterId" : '';
+
         $sql = "
-            SELECT 
+            SELECT
                 m.message_id,
                 m.user_id,
                 m.content,
@@ -1066,6 +1071,7 @@ class SupportGroupModel
             LEFT JOIN support_group_members sgm ON sgm.group_id = m.group_id AND sgm.user_id = m.user_id
             WHERE m.group_id = $groupId
             AND m.is_deleted = 0
+            $afterFilter
             ORDER BY m.created_at ASC
             LIMIT $limit
         ";

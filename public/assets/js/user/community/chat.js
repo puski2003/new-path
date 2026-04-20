@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (supportTab) {
                     supportTab.classList.add('chat-tab-content--active');
                     supportTab.style.display = 'flex';
+                     closeDmConversation();
                 }
             }
 

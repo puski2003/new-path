@@ -32,20 +32,15 @@ require_once __DIR__ . '/../../common/admin.html.head.php';
                     <textarea class="form-textarea" id="description" name="description" rows="4"><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
                 </div>
 
-                <div class="form-row"> 
-                    <!-- <div class="form-group">
+                <div class="form-row">
+                    <div class="form-group">
                         <label class="form-label" for="meeting_schedule">Meeting Schedule</label>
                         <input class="form-input" type="text" id="meeting_schedule" name="meeting_schedule" value="<?= htmlspecialchars($_POST['meeting_schedule'] ?? '') ?>" placeholder="e.g., Mondays 6:00 PM" />
-                    </div> -->
+                    </div>
                     <div class="form-group">
                         <label class="form-label" for="max_members">Max Members</label>
                         <input class="form-input" type="number" id="max_members" name="max_members" value="<?= htmlspecialchars($_POST['max_members'] ?? '') ?>" min="1" placeholder="Leave empty for unlimited" />
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="meeting_link">Meeting Link</label>
-                    <input class="form-input" type="url" id="meeting_link" name="meeting_link" value="<?= htmlspecialchars($_POST['meeting_link'] ?? '') ?>" placeholder="https://meet.google.com/..." />
                 </div>
 
                 <div class="form-actions">

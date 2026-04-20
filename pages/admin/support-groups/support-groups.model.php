@@ -78,31 +78,34 @@ class SupportGroupsModel
 
     public static function createGroup(array $input, int $adminUserId): bool
     {
-        $adminId = self::getAdminIdByUserId($adminUserId); 
+        $adminId = self::getAdminIdByUserId($adminUserId);
         $maxMembers = is_numeric($input['max_members'] ?? null) ? (int) $input['max_members'] : 'NULL';
+        $meetingSchedule = self::esc($input['meeting_schedule'] ?? '');
+        $createdBy = $adminId > 0 ? $adminId : 'NULL';
 
-        Database::iud(
+        return Database::iud(
             "INSERT INTO support_groups
-                (name, description, category, meeting_link, max_members, is_active, created_by, created_at, updated_at)
+                (name, description, category, meeting_schedule, max_members, is_active, created_by, created_at, updated_at)
              VALUES
                 ('" . self::esc($input['name'] ?? '') . "',
                  '" . self::esc($input['description'] ?? '') . "',
                  '" . self::esc($input['category'] ?? '') . "',
-                 '" . self::esc($input['meeting_link'] ?? '') . "',
+                 '$meetingSchedule',
                  $maxMembers,
                  1,
-                 " . max(1, $adminId) . ",
+                 $createdBy,
                  NOW(),
                  NOW())"
         );
-        return true;
     }
 
     private static function getAdminIdByUserId(int $userId): int
     {
         $safeUserId = max(0, $userId);
         $rs = Database::search("SELECT admin_id FROM admin WHERE user_id = $safeUserId LIMIT 1");
-        return (int) ($rs && $row = $rs->fetch_assoc() ? ($row['admin_id'] ?? 0) : 0);
+        if (!$rs) return 0;
+        $row = $rs->fetch_assoc();
+        return (int) ($row['admin_id'] ?? 0);
     }
 
     public static function getGroupsForDropdown(): array
