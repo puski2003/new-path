@@ -48,7 +48,7 @@ $meetingLink    = (string)($session['meetingLink'] ?? '');
             <?php $hasReview = !empty($session['hasReview']); ?>
             <?php $hasDispute = !empty($session['hasDispute']); ?>
             <?php if ($hasReview): ?>
-                <button class="btn btn-secondary" type="button" disabled>Reviewed ✓</button>
+                <button class="btn btn-secondary" type="button" disabled>Reviewed</button>
             <?php else: ?>
                 <a class="btn btn-secondary" href="/user/sessions?id=<?= $sessionId ?>&review=1">Leave Review</a>
             <?php endif; ?>

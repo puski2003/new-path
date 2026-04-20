@@ -85,7 +85,7 @@ function validateForm() {
             valid = false;
         }
     }
-
+    return valid;
 }
 
 document.querySelector('form').addEventListener('submit', function (e) {

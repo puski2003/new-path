@@ -97,17 +97,29 @@ function decodePlanPayload(string $text): ?array
         // 1. Standard decode
         $decoded = json_decode($candidate, true);
         if (is_array($decoded)) return $decoded;
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, true);
+            if (is_array($decoded)) return $decoded;
+        }
 
         // 2. Sanitize raw control chars inside strings (common LLM issue), retry
         $sanitized = sanitizeJson($candidate);
         $decoded   = json_decode($sanitized, true);
         if (is_array($decoded)) return $decoded;
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, true);
+            if (is_array($decoded)) return $decoded;
+        }
 
         // 3. Trailing-comma fix on sanitized candidate
         $relaxed = preg_replace("/,\s*([}\]])/", '$1', $sanitized);
         if (is_string($relaxed)) {
             $decoded = json_decode($relaxed, true);
             if (is_array($decoded)) return $decoded;
+            if (is_string($decoded)) {
+                $decoded = json_decode($decoded, true);
+                if (is_array($decoded)) return $decoded;
+            }
         }
     }
     return null;
@@ -291,6 +303,51 @@ Return ONLY valid JSON with exactly this structure:
 }
 
 Rules: task.type must be one of: custom, journal, meditation, session, exercise. task.recurrence must be one of: "" (one-time), "daily", "weekly", "bi-weekly". Provide 3-5 tasks per phase. Dates must use YYYY-MM-DD. All string values must be on a single line — no literal newlines inside strings. No markdown fences. No text before or after the JSON.
+
+Few-shot example:
+Input: "Create a 3-month alcohol recovery plan for a client who needs weekly therapy, daily journaling, and relapse prevention support."
+Output:
+{
+    "title": "Alcohol Recovery Support Plan",
+    "goal": "Support sustained sobriety and strengthen relapse-prevention skills.",
+    "description": "This plan focuses on stabilization, habit change, and long-term maintenance. It combines therapy, journaling, coping practice, and recovery structure.",
+    "startDate": "2026-04-21",
+    "endDate": "2026-07-21",
+    "shortTermGoalTitle": "Complete the first 30 days sober with consistent support",
+    "shortTermGoalDays": 30,
+    "longTermGoalTitle": "Maintain sobriety for 90 days and build a relapse-prevention routine",
+    "longTermGoalDays": 90,
+    "phases": {
+        "1": {
+            "name": "Stabilization",
+            "tasks": [
+                {"title": "Attend one weekly therapy session", "type": "session", "recurrence": "weekly"},
+                {"title": "Write a daily journal check-in", "type": "journal", "recurrence": "daily"},
+                {"title": "Practice a 5-minute grounding exercise", "type": "meditation", "recurrence": "daily"}
+            ],
+            "milestones": ["Complete the first week sober", "Identify top relapse triggers"]
+        },
+        "2": {
+            "name": "Reduction",
+            "tasks": [
+                {"title": "Review craving patterns with therapist", "type": "session", "recurrence": "weekly"},
+                {"title": "Use a craving log after difficult moments", "type": "journal", "recurrence": "daily"},
+                {"title": "Do a 10-minute stress reset routine", "type": "exercise", "recurrence": "daily"}
+            ],
+            "milestones": ["Reduce high-risk situations", "Use coping skills without prompting"]
+        },
+        "3": {
+            "name": "Maintenance",
+            "tasks": [
+                {"title": "Continue weekly recovery support", "type": "session", "recurrence": "weekly"},
+                {"title": "Track sobriety wins in a journal", "type": "journal", "recurrence": "weekly"},
+                {"title": "Practice a relapse-prevention review", "type": "meditation", "recurrence": "weekly"}
+            ],
+            "milestones": ["Build a stable sober routine", "Prepare a follow-up plan"]
+        }
+    },
+    "notes": "Keep tone supportive, practical, and nonjudgmental."
+}
 PROMPT;
 
 if ($openRouterKey !== '') {

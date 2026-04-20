@@ -61,7 +61,7 @@
                             <?php else: ?>
                                 <a class="btn btn-primary" href="/user/counselors?id=<?= (int)$sessionData['counselorId'] ?>">Rebook</a>
                                 <?php if ($sessionData['hasReview']): ?>
-                                    <button class="btn btn-secondary" type="button" disabled title="You've already reviewed this session">Reviewed ✓</button>
+                                    <button class="btn btn-secondary" type="button" disabled title="You've already reviewed this session">Reviewed</button>
                                 <?php elseif ($sessionData['status'] === 'completed'): ?>
                                     <button class="btn btn-secondary" type="button" id="openReviewModal">Leave Review</button>
                                 <?php endif; ?>
