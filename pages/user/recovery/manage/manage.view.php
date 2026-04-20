@@ -3,6 +3,26 @@ $activePlans = $data['activePlans'];
 $pendingPlans = $data['pendingPlans'];
 $pausedPlans = $data['pausedPlans'];
 $success = $data['success'] ?? null;
+
+function planOrigin(array $plan): string {
+    if (!empty($plan['counselorId'])) return 'counselor';
+    if (!empty($plan['sourcePlanId'])) return 'system';
+    return 'self';
+}
+
+function planOriginBadge(array $plan): string {
+    $origin = planOrigin($plan);
+    $map = [
+        'counselor' => ['icon' => 'user-check',   'label' => 'Counselor Plan', 'class' => 'counselor'],
+        'system'    => ['icon' => 'shield',        'label' => 'System Plan',    'class' => 'system'],
+        'self'      => ['icon' => 'pencil',        'label' => 'Self-managed',   'class' => 'self'],
+    ];
+    $b = $map[$origin];
+    return '<span class="plan-origin-badge ' . $b['class'] . '">'
+         . '<i data-lucide="' . $b['icon'] . '" stroke-width="2"></i>'
+         . htmlspecialchars($b['label'])
+         . '</span>';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,7 +76,8 @@ $success = $data['success'] ?? null;
                         </h3>
                         <div class="plans-list">
                             <?php foreach ($activePlans as $plan): ?>
-                                <div class="plan-card active">
+                                <div class="plan-card active origin-<?= planOrigin($plan) ?>">
+                                    <?= planOriginBadge($plan) ?>
                                     <div class="plan-card-header">
                                         <h4 class="plan-title"><?= htmlspecialchars($plan['title']) ?></h4>
                                         <span class="plan-status status-active">Active</span>
@@ -87,7 +108,8 @@ $success = $data['success'] ?? null;
                         </h3>
                         <div class="plans-list">
                             <?php foreach ($pendingPlans as $plan): ?>
-                                <div class="plan-card pending">
+                                <div class="plan-card pending origin-<?= planOrigin($plan) ?>">
+                                    <?= planOriginBadge($plan) ?>
                                     <div class="plan-card-header">
                                         <h4 class="plan-title"><?= htmlspecialchars($plan['title']) ?></h4>
                                         <span class="plan-status status-pending">Pending</span>
@@ -119,7 +141,8 @@ $success = $data['success'] ?? null;
                         </h3>
                         <div class="plans-list">
                             <?php foreach ($pausedPlans as $plan): ?>
-                                <div class="plan-card paused">
+                                <div class="plan-card paused origin-<?= planOrigin($plan) ?>">
+                                    <?= planOriginBadge($plan) ?>
                                     <div class="plan-card-header">
                                         <h4 class="plan-title"><?= htmlspecialchars($plan['title']) ?></h4>
                                         <span class="plan-status status-paused">Paused</span>
