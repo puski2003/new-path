@@ -66,24 +66,9 @@ require_once __DIR__ . '/../common/admin.html.head.php';
             </div>
 
             <div class="data-row">
-                <div class="data-card data-card--grow">
-                    <h2>Notifications &amp; Alerts</h2>
-                    <div class="alert alert--urgent">
-                        <strong>15 Unresolved Content Reports</strong>
-                        <p>Requires immediate moderation</p>
-                    </div>
-                    <div class="alert alert--pending">
-                        <strong>8 Counselor Applications Pending</strong>
-                        <p>Review required for approval</p>
-                    </div>
-                    <div class="alert alert--warning">
-                        <strong>3 Security Warnings</strong>
-                        <p>Suspicious login attempts detected</p>
-                    </div>
-                    <div class="alert alert--info">
-                        <strong>System Update Available</strong>
-                        <p>New features ready to install</p>
-                    </div>
+                <div class="data-card data-card--wide" style="height: 340px;">
+                    <h2>Monthly Revenue Trend</h2>
+                    <canvas id="dashRevenueChart" style="width:100%;height:260px;"></canvas>
                 </div>
 
                 <div class="data-card">
@@ -158,6 +143,51 @@ require_once __DIR__ . '/../common/admin.html.head.php';
                 maintainAspectRatio: false,
                 plugins: { legend: { position: 'bottom' } },
                 cutout: '65%',
+            },
+        });
+    }
+
+    // Line chart — Monthly Revenue Trend
+    const revenueLabels = <?= json_encode($revenueChart['labels']) ?>;
+    const revenueData   = <?= json_encode($revenueChart['revenue']) ?>;
+    const revCtx = document.getElementById('dashRevenueChart');
+    if (revCtx) {
+        new Chart(revCtx, {
+            type: 'line',
+            data: {
+                labels: revenueLabels,
+                datasets: [{
+                    label: 'Revenue (LKR)',
+                    data: revenueData,
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99,102,241,0.10)',
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#6366f1',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => 'LKR ' + ctx.parsed.y.toLocaleString('en-LK', { minimumFractionDigits: 2 }),
+                        },
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f1f5f9' },
+                        ticks: { callback: v => 'LKR ' + (v / 1000).toFixed(0) + 'k' },
+                    },
+                    x: { grid: { display: false } },
+                },
             },
         });
     }
