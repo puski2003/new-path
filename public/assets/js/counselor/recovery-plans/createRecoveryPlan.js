@@ -205,9 +205,15 @@ function removeClient() {
 function validateForm() {
     let valid = true;
 
+    const assignedTo = document.getElementById('assignedTo');
     const title     = document.getElementById('title');
     const startDate = document.getElementById('startDate');
     const endDate   = document.getElementById('endDate') || document.getElementById('targetCompletionDate');
+
+    if (assignedTo && !assignedTo.value) {
+        showError(assignedTo, 'Please assign a client to this plan.');
+        valid = false;
+    }
 
     if (title && !title.value.trim()) {
         showError(title, 'Plan title is required.');
@@ -253,15 +259,32 @@ function clearErrors() {
 function initializeDates() {
     const startDate = document.getElementById('startDate');
     const endDate   = document.getElementById('endDate');
+    const today     = formatDate(new Date());
 
-    if (startDate && !startDate.value) {
-        startDate.value = formatDate(new Date());
+    if (startDate) {
+        startDate.setAttribute('min', today);
+        if (!startDate.value) {
+            startDate.value = today;
+        }
+        startDate.addEventListener('change', validateStartDate);
     }
 
     if (endDate && !endDate.value) {
         const d = new Date();
         d.setMonth(d.getMonth() + 3);
         endDate.value = formatDate(d);
+    }
+}
+
+function validateStartDate() {
+    const startDate = document.getElementById('startDate');
+    const today = formatDate(new Date());
+    
+    if (startDate && startDate.value < today) {
+        showError(startDate, 'Start date cannot be in the past.');
+    } else if (startDate && startDate.parentNode.querySelector('.rp-field-error')) {
+        startDate.parentNode.querySelector('.rp-field-error').remove();
+        startDate.classList.remove('error-border');
     }
 }
 
@@ -291,7 +314,6 @@ function exportPDF() {
     alert('PDF export will be implemented with a backend service.');
 }
 
-// Inject keyframe for loading icon once
 (function () {
     if (document.getElementById('rp-anim-style')) return;
     const s = document.createElement('style');

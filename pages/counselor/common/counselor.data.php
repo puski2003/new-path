@@ -323,7 +323,7 @@ class CounselorData
         $experienceYears = (int) ($input['experienceYears'] ?? 0);
         $education = self::esc($input['education'] ?? '');
         $certifications = self::esc($input['certifications'] ?? '');
-        $languagesSpoken = self::esc($input['languagesSpoken'] ?? '');
+        $languagesSpoken = self::esc(implode(', ', $input['languagesSpoken'] ?? []));
         $consultationFee = is_numeric($input['consultationFee'] ?? null) ? (float) $input['consultationFee'] : 'NULL';
         $documentsUrl = self::esc($input['documentsUrl'] ?? '');
 
