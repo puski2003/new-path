@@ -7,7 +7,7 @@ if (!Request::isPost()) {
 }
 
 $userId = (int) (Request::post('userId') ?? 0);
-$result = UserManagementModel::deleteUser($userId, (int) $user['id']);
+$result = UserManagementModel::banUser($userId, (int) $user['id']);
 
 $type = urlencode((string) ($result['type'] ?? 'error'));
 $message = urlencode((string) ($result['message'] ?? 'Delete failed.'));

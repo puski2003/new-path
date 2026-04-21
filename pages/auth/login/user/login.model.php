@@ -11,7 +11,7 @@ class LoginModel
         $safeEmail = Database::$connection->real_escape_string($email);
 
         $rs = Database::search(
-            "SELECT user_id, email, password_hash, role, display_name, first_name, onboarding_completed, current_onboarding_step
+            "SELECT user_id, email, password_hash, role, display_name, first_name, onboarding_completed, current_onboarding_step, status
              FROM users
              WHERE email = '$safeEmail'
              LIMIT 1"

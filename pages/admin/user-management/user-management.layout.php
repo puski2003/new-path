@@ -69,7 +69,11 @@ require_once __DIR__ . '/../common/admin.html.head.php';
                         <td class="admin-table-td">#<?= $item['userId'] ?></td>
                         <td class="admin-table-td"><strong><?= htmlspecialchars($item['fullName']) ?></strong><br><small><?= htmlspecialchars($item['email']) ?></small></td>
                         <td class="admin-table-td"><?= htmlspecialchars($item['role']) ?></td>
-                        <td class="admin-table-td"><?= htmlspecialchars($item['status']) ?></td>
+                        <td class="admin-table-td">
+                            <span class="admin-status-badge admin-status-badge--<?= strtolower($item['status']) ?>">
+                                <?= htmlspecialchars($item['status']) ?>
+                            </span>
+                        </td>
                         <td class="admin-table-td"><?= htmlspecialchars($item['lastActive']) ?></td>
                         <td class="admin-table-td"><?= htmlspecialchars($item['registration']) ?></td>
                         <td class="admin-table-td admin-table-td--action">
@@ -92,15 +96,27 @@ require_once __DIR__ . '/../common/admin.html.head.php';
                                 >
                                     <i data-lucide="pencil" class="button-icon" stroke-width="1.75"></i>
                                 </a>
+                                <?php if ($item['isBanned']): ?>
+                                <button
+                                    type="button"
+                                    class="admin-button admin-button--secondary admin-button--icon-only"
+                                    title="Unban user"
+                                    aria-label="Unban user"
+                                    onclick="unbanUser(<?= $item['userId'] ?>, <?= htmlspecialchars(json_encode($item['fullName']), ENT_QUOTES) ?>)"
+                                >
+                                    <i data-lucide="circle-check" class="button-icon" stroke-width="1.75"></i>
+                                </button>
+                                <?php else: ?>
                                 <button
                                     type="button"
                                     class="admin-button admin-button--danger admin-button--icon-only"
-                                    title="Delete user"
-                                    aria-label="Delete user"
-                                    onclick="deleteUser(<?= $item['userId'] ?>, <?= json_encode($item['fullName']) ?>)"
+                                    title="Ban user"
+                                    aria-label="Ban user"
+                                    onclick="banUser(<?= $item['userId'] ?>, <?= htmlspecialchars(json_encode($item['fullName']), ENT_QUOTES) ?>)"
                                 >
-                                    <i data-lucide="trash-2" class="button-icon" stroke-width="1.75"></i>
+                                    <i data-lucide="ban" class="button-icon" stroke-width="1.75"></i>
                                 </button>
+                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>
@@ -133,12 +149,10 @@ require_once __DIR__ . '/../common/admin.html.head.php';
     }
 })();
 
-function deleteUser(userId, fullName) {
-    if (!confirm('Delete "' + fullName + '"? This action cannot be undone.')) return;
-
+function postAction(action, userId) {
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/admin/user-management/delete';
+    form.action = action;
 
     const input = document.createElement('input');
     input.type = 'hidden';
@@ -148,6 +162,16 @@ function deleteUser(userId, fullName) {
     form.appendChild(input);
     document.body.appendChild(form);
     form.submit();
+}
+
+function banUser(userId, fullName) {
+    if (!confirm('Ban "' + fullName + '"? They will not be able to log in until unbanned.')) return;
+    postAction('/admin/user-management/delete', userId);
+}
+
+function unbanUser(userId, fullName) {
+    if (!confirm('Unban "' + fullName + '"? They will be able to log in again.')) return;
+    postAction('/admin/user-management/unban', userId);
 }
 
 document.addEventListener('DOMContentLoaded', function () {

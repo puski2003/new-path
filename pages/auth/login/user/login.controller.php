@@ -29,6 +29,8 @@ if (Request::isPost()) {
 
         if ($user === null || !password_verify($password, $hash)) {
             $error = 'Invalid email or password.';
+        } elseif (($user['status'] ?? 'active') === 'banned') {
+            $error = 'Your account has been banned. Please contact admin@newpath.com for assistance.';
         } else {
             $displayName = $user['display_name'] ?: ($user['first_name'] ?: 'User');
 

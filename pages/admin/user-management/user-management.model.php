@@ -57,7 +57,7 @@ class UserManagementModel
             $where[] = "DATE(created_at) = '$safeDate'";
         }
 
-        $sql = "SELECT user_id, email, role, display_name, first_name, last_name, last_login, created_at, is_active, onboarding_completed
+        $sql = "SELECT user_id, email, role, display_name, first_name, last_name, last_login, created_at, is_active, onboarding_completed, status
                 FROM users
                 WHERE " . implode(' AND ', $where) . "
                 ORDER BY created_at DESC, user_id DESC";
@@ -81,7 +81,8 @@ class UserManagementModel
                 'fullName' => $name,
                 'email' => $row['email'] ?? '',
                 'role' => self::roleLabel((string) ($row['role'] ?? 'user')),
-                'status' => !$row['is_active'] ? 'Inactive' : (!empty($row['onboarding_completed']) ? 'Active' : 'Pending'),
+                'status' => ($row['status'] ?? 'active') === 'banned' ? 'Banned' : (!$row['is_active'] ? 'Inactive' : (!empty($row['onboarding_completed']) ? 'Active' : 'Pending')),
+                'isBanned' => ($row['status'] ?? 'active') === 'banned',
                 'engagement' => $engagement,
                 'lastActive' => !empty($row['last_login']) ? date('M j, Y', strtotime($row['last_login'])) : 'Never',
                 'registration' => !empty($row['created_at']) ? date('M j, Y', strtotime($row['created_at'])) : '-',
@@ -268,7 +269,26 @@ class UserManagementModel
         return ['ok' => true, 'type' => 'success', 'message' => 'User updated successfully.'];
     }
 
-    public static function deleteUser(int $userId, int $actorUserId): array
+    public static function unbanUser(int $userId, int $actorUserId): array
+    {
+        $safeUserId = max(0, $userId);
+
+        if ($safeUserId <= 0) {
+            return ['ok' => false, 'type' => 'warning', 'message' => 'Invalid user selected.'];
+        }
+
+        $target = self::getUserById($safeUserId);
+        if (!$target) {
+            return ['ok' => false, 'type' => 'warning', 'message' => 'User not found.'];
+        }
+
+        Database::iud("UPDATE users SET status = 'active', updated_at = NOW() WHERE user_id = $safeUserId");
+
+        $identifier = '#' . $safeUserId . ' (' . ($target['fullName'] !== '' ? $target['fullName'] : $target['email']) . ')';
+        return ['ok' => true, 'type' => 'success', 'message' => 'User ' . $identifier . ' has been unbanned.'];
+    }
+
+    public static function banUser(int $userId, int $actorUserId): array
     {
         $safeUserId = max(0, $userId);
         $safeActorUserId = max(0, $actorUserId);
@@ -278,7 +298,7 @@ class UserManagementModel
         }
 
         if ($safeUserId === $safeActorUserId) {
-            return ['ok' => false, 'type' => 'warning', 'message' => 'You cannot delete your own account.'];
+            return ['ok' => false, 'type' => 'warning', 'message' => 'You cannot ban your own account.'];
         }
 
         $target = self::getUserById($safeUserId);
@@ -286,7 +306,17 @@ class UserManagementModel
             return ['ok' => false, 'type' => 'warning', 'message' => 'User not found.'];
         }
 
+        if ($target['role'] === 'admin') {
+            $adminCountRs = Database::search("SELECT COUNT(*) AS total FROM users WHERE role = 'admin' AND status != 'banned'");
+            $activeAdmins = (int) (($adminCountRs ? $adminCountRs->fetch_assoc()['total'] : 0) ?? 0);
+            if ($activeAdmins <= 1) {
+                return ['ok' => false, 'type' => 'warning', 'message' => 'At least one active admin account must remain.'];
+            }
+        }
+
+        Database::iud("UPDATE users SET status = 'banned', updated_at = NOW() WHERE user_id = $safeUserId");
+
         $identifier = '#' . $safeUserId . ' (' . ($target['fullName'] !== '' ? $target['fullName'] : $target['email']) . ')';
-        return ['ok' => true, 'type' => 'success', 'message' => 'Entry ' . $identifier . ' deleted.'];
+        return ['ok' => true, 'type' => 'success', 'message' => 'User ' . $identifier . ' has been banned.'];
     }
 }
