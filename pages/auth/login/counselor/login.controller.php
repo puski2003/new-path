@@ -26,6 +26,8 @@ if (Request::isPost()) {
         } elseif (($user['status'] ?? 'active') === 'banned') {
             $error = 'Your account has been banned. Please contact admin@newpath.com for assistance.';
         } else {
+            Database::iud("UPDATE users SET last_login = NOW() WHERE user_id = " . (int) $user['user_id']);
+
             $displayName = $user['display_name'] ?: ($user['first_name'] ?: 'Counselor');
 
             $token = Auth::sign([

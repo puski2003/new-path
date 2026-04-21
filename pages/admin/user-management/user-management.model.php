@@ -81,7 +81,7 @@ class UserManagementModel
                 'fullName' => $name,
                 'email' => $row['email'] ?? '',
                 'role' => self::roleLabel((string) ($row['role'] ?? 'user')),
-                'status' => ($row['status'] ?? 'active') === 'banned' ? 'Banned' : (!$row['is_active'] ? 'Inactive' : (!empty($row['onboarding_completed']) ? 'Active' : 'Pending')),
+                'status' => ($row['status'] ?? 'active') === 'banned' ? 'Banned' : (!$row['is_active'] ? 'Inactive' : ($row['role'] === 'user' && empty($row['onboarding_completed']) ? 'Pending' : 'Active')),
                 'isBanned' => ($row['status'] ?? 'active') === 'banned',
                 'engagement' => $engagement,
                 'lastActive' => !empty($row['last_login']) ? date('M j, Y', strtotime($row['last_login'])) : 'Never',
