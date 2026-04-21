@@ -48,7 +48,7 @@ class JournalModel
         $total = (int)($countRs->fetch_assoc()['total'] ?? 0);
 
         $rs = Database::search("
-            SELECT je.entry_id, je.title, je.content, je.mood, je.is_highlight, je.created_at,
+            SELECT je.entry_id, je.title, je.content, je.mood, CAST(je.is_highlight AS UNSIGNED) AS is_highlight, je.created_at,
                    jc.name AS category_name, jc.color AS category_color
             FROM journal_entries je
             LEFT JOIN journal_categories jc ON jc.category_id = je.category_id
@@ -113,7 +113,7 @@ class JournalModel
         $content = trim($data['content'] ?? '');
         $categoryId = (int)($data['category_id'] ?? 0);
         $mood = trim($data['mood'] ?? '');
-        $isHighlight = isset($data['is_highlight']) ? 1 : 0;
+        $isHighlight = !empty($data['is_highlight']) ? 1 : 0;
 
         if (strlen($content) < 1) return false;
 
